@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-10-12T14:08:15+00:00",
+  "default_run": "v2-verified",
+  "runs": [
+    {
+      "id": "v2-verified",
+      "label": "Agent v2 \u2014 verified (after)",
+      "file": "runs/v2-verified.json"
+    },
+    {
+      "id": "v2-recovery",
+      "label": "Agent v2 \u2014 injected crash, recovers",
+      "file": "runs/v2-recovery.json"
+    },
+    {
+      "id": "v1-naive",
+      "label": "Agent v1 \u2014 naive (before)",
+      "file": "runs/v1-naive.json"
+    }
+  ]
+}
