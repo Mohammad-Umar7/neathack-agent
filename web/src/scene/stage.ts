@@ -14,7 +14,7 @@ import { Kit } from './materials';
 import { Cell, CellAssets } from './cell';
 import { Environment } from './env';
 import { CameraRig, easeOutCubic } from './camera';
-import { ensureStyles } from './labels';
+import { ensureStyles, makeLabel } from './labels';
 import { clearGeomCache } from './geom';
 
 type FocusTarget = 'overview' | 'infeed' | 'pick' | 'panel' | 'guard' | 'auto';
@@ -29,6 +29,13 @@ const PRESETS: Record<'infeed' | 'pick' | 'panel' | 'guard', [THREE.Vector3, THR
 };
 
 const TWIN_OFFSET = 3.95;
+const HOVER_TEXT: Record<PanelControl, string> = {
+  START: 'START<small>push button</small>',
+  STOP: 'STOP<small>push button</small>',
+  RESET: 'RESET<small>push button</small>',
+  ESTOP: 'E-STOP<small>emergency stop</small>',
+  GUARD: 'GUARD DOOR<small>open / close</small>',
+};
 
 export class StageImpl implements Stage {
   private readonly renderer: THREE.WebGLRenderer;
@@ -102,6 +109,10 @@ export class StageImpl implements Stage {
     this.cells = { A: new Cell('A', this.assets), B: new Cell('B', this.assets) };
     this.scene.add(this.cells.A.root, this.cells.B.root);
     this.rig = new CameraRig(this.camera, canvas);
+    this.hoverTag = makeLabel('sp3d-hover', '');
+    this.hoverTag.visible = false;
+    this.hoverTag.center.set(0.5, 1.9); // float above the pointer hit
+    this.scene.add(this.hoverTag);
 
     if (this.high) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
@@ -292,12 +303,19 @@ export class StageImpl implements Stage {
     }
   }
 
-  private setHover(c: PanelControl | null): void {
+  private readonly hoverTag: ReturnType<typeof makeLabel>;
+
+  private setHover(c: PanelControl | null, at?: THREE.Vector3): void {
+    if (at && c) this.hoverTag.position.copy(at);
     if (c === this.hover) return;
     this.hover = c;
     this.cells.A.setHover(c);
     this.renderer.domElement.style.cursor = c ? 'pointer' : '';
+    this.hoverTag.visible = !!c;
+    if (c) this.hoverTag.element.innerHTML = HOVER_TEXT[c];
   }
+
+  private readonly hoverPoint = new THREE.Vector3();
 
   private pickAt(clientX: number, clientY: number): PanelControl | null {
     const r = this.renderer.domElement.getBoundingClientRect();
@@ -307,7 +325,10 @@ export class StageImpl implements Stage {
     const hits = this.raycaster.intersectObjects(this.cells.A.pickables, false);
     for (const h of hits) {
       const c = h.object.userData.control as PanelControl | undefined;
-      if (c) return c;
+      if (c) {
+        this.hoverPoint.copy(h.point);
+        return c;
+      }
     }
     return null;
   }
@@ -394,7 +415,8 @@ export class StageImpl implements Stage {
     this.renderer.info.reset();
     if (this.interactive && this.pointerInside && this.pointerDirty && !this.down) {
       this.pointerDirty = false;
-      this.setHover(this.pickAt(this.lastPointer.x, this.lastPointer.y));
+      const c = this.pickAt(this.lastPointer.x, this.lastPointer.y);
+      this.setHover(c, c ? this.hoverPoint : undefined);
     }
     this.cells.A.update(dt, this.time);
     if (this.layout === 'twin') this.cells.B.update(dt, this.time);

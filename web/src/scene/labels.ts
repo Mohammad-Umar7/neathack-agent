@@ -30,6 +30,10 @@ export function ensureStyles(): void {
   box-shadow:0 0 14px rgba(60,200,255,.25);white-space:nowrap;}
 .sp3d-sig b{color:#fff;font-weight:800;margin-left:6px;}
 .sp3d-sig b.on{color:#ffb35a;}
+.sp3d-hover{font:700 11px/1 Inter,"Segoe UI",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  color:#111;background:#ffd23f;padding:6px 9px;border-radius:5px;white-space:nowrap;
+  box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.25);}
+.sp3d-hover small{font-weight:600;letter-spacing:.04em;text-transform:none;opacity:.75;margin-left:6px;}
 .sp3d-viol{font:600 12px/1.35 Inter,"Segoe UI",system-ui,sans-serif;color:#fff;max-width:280px;
   padding:8px 12px 9px;border-radius:8px;background:rgba(40,6,8,.86);border:1px solid rgba(255,70,60,.75);
   box-shadow:0 0 0 1px rgba(255,40,40,.15),0 0 28px rgba(255,40,30,.55),0 10px 30px rgba(0,0,0,.5);

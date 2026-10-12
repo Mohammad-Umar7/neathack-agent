@@ -337,7 +337,7 @@ export class PanelDynamic {
     let n = 0;
     for (const l of this.lamps) {
       l.level = THREE.MathUtils.lerp(l.level, l.on ? 1 : 0, 1 - Math.exp(-dt * 18));
-      l.mat.emissiveIntensity = l.level * 3.0;
+      l.mat.emissiveIntensity = l.level * 2.1;
       if (l.level > 0.01) {
         r += l.color.r * l.level;
         gc += l.color.g * l.level;
