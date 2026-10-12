@@ -130,7 +130,7 @@ export class Cell {
     this.sensors = [new PhotoEye(kit, PE_IN_X, 'PE_IN'), new PhotoEye(kit, PE_END_X, 'PE_END')];
     for (const s of this.sensors) this.content.add(s.group);
     this.panel = new PanelDynamic(kit);
-    this.panel.setCellName(id);
+    this.panel.setCellName(`CELL ${id}`);
     this.content.add(this.panel.group);
     this.door = new GuardDoor(kit);
     this.content.add(this.door.group);
@@ -225,6 +225,8 @@ export class Cell {
 
   setTitle(text: string | null): void {
     this.titleWanted = !!text;
+    // the console HMI names the variant in twin mode ("BASELINE"), the cell otherwise
+    this.panel.setCellName(text ? text.split(/\s+[—–-]\s+/)[0].slice(0, 14).toUpperCase() : `CELL ${this.id}`);
     if (text) {
       const [head, ...rest] = text.split(/\s+[—–-]\s+/);
       const tail = rest.join(' — ');

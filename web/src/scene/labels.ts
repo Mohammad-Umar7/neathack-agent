@@ -8,8 +8,8 @@ export function ensureStyles(): void {
   const s = document.createElement('style');
   s.id = STYLE_ID;
   s.textContent = `
-.sp3d-root{position:relative;overflow:hidden;}
-.sp3d-root canvas{display:block;outline:none;}
+/* the host keeps its own positioning; the scene only styles what it adds */
+.sp3d-root > canvas{display:block;outline:none;}
 .sp3d-css{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .sp3d-css > div{pointer-events:none;}
 .sp3d-cell{font:600 13px/1.2 Inter,"Segoe UI",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;
@@ -25,6 +25,11 @@ export function ensureStyles(): void {
   padding:5px 8px;border-radius:4px;background:rgba(214,30,190,.92);box-shadow:0 0 18px rgba(255,60,230,.75);
   animation:sp3d-blink .5s steps(2,end) infinite;white-space:nowrap;}
 @keyframes sp3d-blink{50%{opacity:.55}}
+.sp3d-sig{font:700 10px/1 "JetBrains Mono",Consolas,ui-monospace,monospace;letter-spacing:.08em;color:#d9f6ff;
+  padding:4px 7px;border-radius:4px;background:rgba(8,14,20,.78);border:1px solid rgba(110,220,255,.45);
+  box-shadow:0 0 14px rgba(60,200,255,.25);white-space:nowrap;}
+.sp3d-sig b{color:#fff;font-weight:800;margin-left:6px;}
+.sp3d-sig b.on{color:#ffb35a;}
 .sp3d-viol{font:600 12px/1.35 Inter,"Segoe UI",system-ui,sans-serif;color:#fff;max-width:280px;
   padding:8px 12px 9px;border-radius:8px;background:rgba(40,6,8,.86);border:1px solid rgba(255,70,60,.75);
   box-shadow:0 0 0 1px rgba(255,40,40,.15),0 0 28px rgba(255,40,30,.55),0 10px 30px rgba(0,0,0,.5);

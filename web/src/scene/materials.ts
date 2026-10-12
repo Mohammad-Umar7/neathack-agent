@@ -117,12 +117,12 @@ export class Kit {
     this.fenceFrame = this.m(new THREE.MeshStandardMaterial({ color: 0x24272b, roughness: 0.5, metalness: 0.45 }));
     this.fenceMesh = this.m(
       new THREE.MeshStandardMaterial({
-        color: 0x50565e,
+        color: 0x5a616a,
         roughness: 0.4,
         metalness: 0.7,
         alphaMap: this.wire,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.62,
         side: THREE.DoubleSide,
         depthWrite: false,
       }),

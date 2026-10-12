@@ -47,6 +47,9 @@ const C_STUCK = new THREE.Color(2.8, 0.25, 2.6);
 export class PhotoEye {
   readonly group = new THREE.Group();
   readonly tag: CSS2DObject;
+  readonly sig: CSS2DObject;
+  private readonly sigValue: HTMLElement;
+  private sigShown = -1;
   private readonly housingMat: THREE.MeshStandardMaterial;
   private readonly ledPower: THREE.MeshStandardMaterial;
   private readonly ledOut: THREE.MeshStandardMaterial;
@@ -94,6 +97,12 @@ export class PhotoEye {
     this.hit.renderOrder = 6;
     this.group.add(this.hit);
 
+    this.sig = makeLabel('sp3d-sig', `${name}<b>0</b>`);
+    this.sig.position.set(x, PE_Y + 0.085, PE_Z_SENSOR + 0.02);
+    this.sig.visible = false;
+    this.group.add(this.sig);
+    this.sigValue = this.sig.element.querySelector('b') as HTMLElement;
+
     this.tag = makeLabel('sp3d-stuck', `${name} STUCK`);
     this.tag.position.set(x, PE_Y + 0.13, PE_Z_SENSOR);
     this.tag.visible = false;
@@ -117,6 +126,20 @@ export class PhotoEye {
     }
     this.beamLen = len;
     this.ledOut.emissiveIntensity = blocked ? 3.0 : 0;
+    const v = blocked ? 1 : 0;
+    if (v !== this.sigShown) {
+      this.sigShown = v;
+      this.sigValue.textContent = String(v);
+      this.sigValue.className = v ? 'on' : '';
+    }
+  }
+
+  /** Fade the signal label in when the camera is close (distance in metres). */
+  setLabelProximity(distance: number, active: boolean): void {
+    const o = Math.max(0, Math.min(1, (4.4 - distance) / 1.4));
+    const show = active && o > 0.02 && !this.stuck;
+    this.sig.visible = show;
+    if (show) this.sig.element.style.opacity = o.toFixed(2);
   }
 
   private setBeam(_flicker: boolean, color?: THREE.Color): void {

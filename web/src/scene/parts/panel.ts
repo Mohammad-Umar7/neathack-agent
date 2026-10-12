@@ -104,21 +104,27 @@ export function buildPanelStatic(root: THREE.Object3D, kit: Kit): void {
   put(face, disc, [kit.yellow, kit.estopDisc, kit.yellow], ESTOP_UV.u, ESTOP_UV.v, 0.0016);
   put(face, new THREE.CylinderGeometry(0.03, 0.032, 0.02, 48).rotateX(Math.PI / 2), kit.blackPlastic, ESTOP_UV.u, ESTOP_UV.v, 0.011);
 
-  // stack light: base, pole, separators, cap
-  const sx = WIDTH / 2 - 0.07;
-  const sz = (P_BACK_Z + P_TOP_FRONT_Z) / 2;
-  const sy = PANEL_BASE_Y + P_TOP_Y;
-  put(g, new THREE.CylinderGeometry(0.032, 0.036, 0.03, 40), kit.blackPlastic, sx, sy + 0.015, sz);
-  put(g, new THREE.CylinderGeometry(0.012, 0.012, 0.2, 24), kit.alu, sx, sy + 0.13, sz);
-  const t0 = sy + 0.23;
+  // stack light (signal tower): base, pole, separators, cap — built in a scaled tower frame
+  const tower = new THREE.Group();
+  tower.position.copy(TOWER_POS);
+  tower.scale.setScalar(TOWER_SCALE);
+  g.add(tower);
+  put(tower, new THREE.CylinderGeometry(0.032, 0.036, 0.03, 40), kit.blackPlastic, 0, 0.015, 0);
+  put(tower, new THREE.CylinderGeometry(0.012, 0.012, 0.2, 24), kit.alu, 0, 0.13, 0);
+  const t0 = TOWER_T0;
   for (let i = 0; i <= 3; i++) {
-    put(g, new THREE.CylinderGeometry(0.0365, 0.0365, 0.008, 48), kit.blackPlastic, sx, t0 + i * (STACK_SEG + 0.008) + 0.004, sz);
+    put(tower, new THREE.CylinderGeometry(0.0365, 0.0365, 0.008, 48), kit.blackPlastic, 0, t0 + i * (STACK_SEG + 0.008) + 0.004, 0);
   }
   const capY = t0 + 3 * (STACK_SEG + 0.008) + 0.008;
-  put(g, lathe([[0.0365, 0], [0.0365, 0.008], [0.033, 0.02], [0.02, 0.028], [0, 0.03]], 48), kit.blackPlastic, sx, capY, sz);
+  put(tower, lathe([[0.0365, 0], [0.0365, 0.008], [0.033, 0.02], [0.02, 0.028], [0, 0.03]], 48), kit.blackPlastic, 0, capY, 0);
+  // buzzer grille ring on the cap
+  put(tower, new THREE.TorusGeometry(0.03, 0.002, 6, 40).rotateX(Math.PI / 2), kit.zinc, 0, capY + 0.012, 0);
 }
 
 const STACK_SEG = 0.072;
+const TOWER_SCALE = 1.35;
+const TOWER_T0 = 0.23; // first lens segment above the tower base (tower-local)
+const TOWER_POS = new THREE.Vector3(WIDTH / 2 - 0.07, PANEL_BASE_Y + P_TOP_Y, (P_BACK_Z + P_TOP_FRONT_Z) / 2);
 const PROXY_GEO = new THREE.CylinderGeometry(1, 1, 0.05, 20).rotateX(Math.PI / 2);
 const PROXY_MAT = new THREE.MeshBasicMaterial({ visible: false });
 
@@ -154,7 +160,7 @@ export class PanelDynamic {
   private readonly hmiMat: THREE.MeshStandardMaterial;
   private hmiKey = '';
   private motor = false;
-  private cellName = 'A';
+  private cellName = 'CELL A';
 
   constructor(kit: Kit) {
     this.group.position.set(PANEL_X, 0, PANEL_Z);
@@ -238,9 +244,11 @@ export class PanelDynamic {
     const ribs: [number, number][] = [];
     for (let i = 0; i <= 14; i++) ribs.push([i % 2 === 0 ? 0.0345 : 0.0358, (i / 14) * STACK_SEG]);
     const lensGeo = lathe(ribs, 48);
-    const sx = WIDTH / 2 - 0.07;
-    const sz = (P_BACK_Z + P_TOP_FRONT_Z) / 2;
-    const t0 = PANEL_BASE_Y + P_TOP_Y + 0.23;
+    const tower = new THREE.Group();
+    tower.position.copy(TOWER_POS);
+    tower.scale.setScalar(TOWER_SCALE);
+    this.group.add(tower);
+    const t0 = TOWER_T0;
     const defs: [number, number][] = [
       [0x2bff6a, 0x0b2412],
       [0xffa21a, 0x2a1a06],
@@ -248,13 +256,13 @@ export class PanelDynamic {
     ];
     defs.forEach(([on, off], i) => {
       const mat = new THREE.MeshStandardMaterial({ color: off, emissive: on, emissiveIntensity: 0, roughness: 0.12, metalness: 0.05 });
-      put(this.group, lensGeo, mat, sx, t0 + 0.008 + i * (STACK_SEG + 0.008), sz);
-      put(this.group, new THREE.CylinderGeometry(0.02, 0.02, STACK_SEG * 0.8, 24), mat, sx, t0 + 0.008 + i * (STACK_SEG + 0.008) + STACK_SEG / 2, sz);
+      put(tower, lensGeo, mat, 0, t0 + 0.008 + i * (STACK_SEG + 0.008), 0);
+      put(tower, new THREE.CylinderGeometry(0.02, 0.02, STACK_SEG * 0.8, 24), mat, 0, t0 + 0.008 + i * (STACK_SEG + 0.008) + STACK_SEG / 2, 0);
       this.lamps.push({ mat, color: new THREE.Color(on), on: false, level: 0 });
     });
     // keep the light well clear of the glossy lenses (fp16 overflow otherwise)
     this.stackLight = new THREE.PointLight(0xffffff, 0, 3.0, 2);
-    this.stackLight.position.set(sx, t0 + 0.16, sz + 0.32);
+    this.stackLight.position.set(TOWER_POS.x, TOWER_POS.y + (t0 + 0.16) * TOWER_SCALE, TOWER_POS.z + 0.34);
     this.group.add(this.stackLight);
     this.drawHmi({ motor: false, estop: false, guardOpen: false, stuck: '', red: false, amber: false });
   }
@@ -271,9 +279,13 @@ export class PanelDynamic {
   }
 
   setCellName(name: string): void {
+    if (name === this.cellName) return;
     this.cellName = name;
     this.hmiKey = '';
+    this.drawHmi(this.hmiState);
   }
+
+  private hmiState = { motor: false, estop: false, guardOpen: false, stuck: '', red: false, amber: false };
 
   apply(inp: Record<string, 0 | 1>, out: Record<string, 0 | 1>, stuck: string): void {
     this.motor = out.MOTOR === 1;
@@ -325,7 +337,7 @@ export class PanelDynamic {
     let n = 0;
     for (const l of this.lamps) {
       l.level = THREE.MathUtils.lerp(l.level, l.on ? 1 : 0, 1 - Math.exp(-dt * 18));
-      l.mat.emissiveIntensity = l.level * 5.5;
+      l.mat.emissiveIntensity = l.level * 3.0;
       if (l.level > 0.01) {
         r += l.color.r * l.level;
         gc += l.color.g * l.level;
@@ -338,6 +350,7 @@ export class PanelDynamic {
   }
 
   private drawHmi(s: { motor: boolean; estop: boolean; guardOpen: boolean; stuck: string; red: boolean; amber: boolean }): void {
+    this.hmiState = s;
     const key = JSON.stringify(s) + this.cellName;
     if (key === this.hmiKey) return;
     this.hmiKey = key;
@@ -355,7 +368,7 @@ export class PanelDynamic {
     g.font = `700 22px ${FONT}`;
     g.textBaseline = 'middle';
     g.textAlign = 'left';
-    g.fillText(`STOP/PROVE · CELL ${this.cellName}`, 14, 21);
+    g.fillText(`STOP/PROVE · ${this.cellName}`, 14, 21);
     let status = 'STOPPED';
     let col = '#c9d1d9';
     if (s.motor) {
