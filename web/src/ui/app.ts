@@ -196,6 +196,16 @@ export class App {
       h('div', { class: 'panel-head' }, h('div', { class: 'ph-title' }, h('span', { class: 'ph-kicker' }, 'Program'), this.ladderTitle), this.progSeg),
       this.ladderChips,
       this.ladder.el,
+      h(
+        'div',
+        { class: 'ladder-legend', title: 'Ladder symbols' },
+        h('span', null, h('code', null, '┤ ├'), 'contact'),
+        h('span', null, h('code', null, '┤/├'), 'NOT'),
+        h('span', null, h('code', null, '┤P├'), 'rising edge'),
+        h('span', null, h('code', null, '( )'), 'coil'),
+        h('span', null, h('code', null, '(S)(R)'), 'latch'),
+        h('span', { class: 'lg-live' }, h('i'), 'energised'),
+      ),
       this.rules.el,
     );
     this.bottom = h('section', { class: 'panel bottom', 'data-panel': 'bottom' }, this.analyzer.el);

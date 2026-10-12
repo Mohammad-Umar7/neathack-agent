@@ -5,6 +5,18 @@ import type { RunFile, Step } from '../types';
 import { fmtDuration, fmtTokens, h, nodes } from './dom';
 import { ICONS, stepIcon } from './icons';
 
+function argsLine(s: Step): string {
+  if (s.args === undefined || s.args === null || s.tool === undefined) return '';
+  let a: string;
+  try {
+    a = typeof s.args === 'string' ? s.args : JSON.stringify(s.args);
+  } catch {
+    return '';
+  }
+  if (!a || a === '{}') return '';
+  return `${s.tool}(${a.length > 160 ? `${a.slice(0, 157)}...` : a})\n\n`;
+}
+
 const KIND_LABEL: Record<string, string> = {
   error: 'Failed action',
   rollback: 'Rollback',
@@ -109,8 +121,9 @@ export class Timeline {
       pre.textContent = '';
       return;
     }
-    if (typing) this.typeInto(pre, s.detail ?? '');
-    else pre.textContent = s.detail ?? '';
+    const text = `${argsLine(s)}${s.detail ?? ''}`;
+    if (typing) this.typeInto(pre, text);
+    else pre.textContent = text;
   }
 
   private typeInto(el: HTMLElement, text: string): void {
