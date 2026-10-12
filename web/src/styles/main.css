@@ -293,11 +293,13 @@ code, pre { font-family: var(--mono); }
 /* ---------- scoreboard ---------- */
 .scoreboard { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 8px; max-width: 100%; }
 .sc-card { position: relative; min-width: 0; padding: 8px 12px 9px; border-radius: 11px; background: rgba(10, 13, 18, 0.72); border: 1px solid var(--line); backdrop-filter: blur(14px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); transition: border-color 0.3s, transform 0.3s var(--ease); }
-.sc-card.big { flex: 1 1 140px; max-width: 210px; }
-.sc-card:not(.big) { flex: 0 1 auto; padding: 5px 10px; display: flex; align-items: baseline; gap: 7px; }
-.sc-card:not(.big) .sc-label { margin: 0; }
-.sc-card:not(.big) .sc-val { font-size: 13px; }
-.sc-card:not(.big) .sc-sub { display: none; }
+.sc-card.big { flex: 1 1 130px; max-width: 196px; }
+.sc-meta { flex: 0 1 auto; display: grid; grid-template-columns: auto auto; gap: 3px 14px; align-content: center; padding: 7px 12px; border-radius: 11px; background: rgba(10, 13, 18, 0.72); border: 1px solid var(--line); backdrop-filter: blur(14px); }
+.sc-mi { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.sc-mi .sc-label { margin: 0; font-size: 9.5px; }
+.sc-mi .sc-row { gap: 4px; }
+.sc-mi .sc-val { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--text); letter-spacing: 0; }
+.sc-mi .sc-from { font-size: 11px; }
 .sc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); font-weight: 600; white-space: nowrap; margin-bottom: 3px; }
 .sc-row { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
 .sc-from { font-family: var(--display); font-size: 14px; color: var(--text-3); font-weight: 600; }
@@ -476,7 +478,7 @@ code, pre { font-family: var(--mono); }
   .scoreboard { gap: 6px; }
   .sc-card.big { flex-basis: 120px; padding: 6px 9px; }
   .sc-val { font-size: 18px; }
-  .sc-card:not(.big) { display: none; }
+  .sc-meta { display: none; }
   .hero-stats { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
@@ -487,3 +489,7 @@ code, pre { font-family: var(--mono); }
   .tp-mid { display: none; }
   .sc-card .sc-sub { display: none; }
 }
+
+/* ---------- stage loading ---------- */
+.app:not(.stage-ready) .stage-host::after { content: 'Loading the digital twin'; position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.035) 50%, transparent 70%) 0 0 / 200% 100%; animation: shimmer 1.4s linear infinite; }
+@keyframes shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }

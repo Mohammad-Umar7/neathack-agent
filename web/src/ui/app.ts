@@ -48,12 +48,23 @@ export function readParams(): Params {
   };
 }
 
+const NULL_STAGE: Stage = {
+  setLayout() {},
+  applyFrame() {},
+  flashViolation() {},
+  focus() {},
+  onControl() {},
+  setInteractive() {},
+  resize() {},
+  dispose() {},
+};
+
 const MODE_LABEL: Record<Mode, string> = { agent: 'Agent run', compare: 'Before / After', play: 'Play' };
 
 export class App {
   readonly root: HTMLDivElement;
   readonly stageHost: HTMLDivElement;
-  private stage!: Stage;
+  private stage: Stage = NULL_STAGE;
   private run!: RunFile;
   private mode: Mode | null = null;
 
@@ -87,7 +98,6 @@ export class App {
   private focusScenario = 'production';
   private simCache = new Map<string, Trace>();
   private traceKey = '';
-  private toastedKeys = new Set<string>();
 
   // compare mode
   private scenarioId = '';
@@ -223,13 +233,24 @@ export class App {
     document.addEventListener('keydown', (e) => this.onKey(e));
   }
 
-  async start(stage: Stage, real: boolean, run: RunFile): Promise<void> {
+  /** Attach the 3D (or 2D) stage once it has loaded; the UI is already running by then. */
+  setStage(stage: Stage, real: boolean): void {
     this.stage = stage;
     this.stageBadge.textContent = real ? '3D' : '2D schematic';
     this.stageBadge.title = real ? 'three.js digital twin' : 'The 3D scene is not available; showing the 2D schematic';
+    this.root.classList.add('stage-ready');
     stage.onControl((c) => {
       if (this.mode === 'play') this.live?.control(c);
     });
+    if (this.mode === 'compare') stage.setLayout('twin', { A: 'BASELINE — as delivered', B: 'REPAIRED — by the agent' });
+    else stage.setLayout('single');
+    stage.setInteractive(this.mode === 'play');
+    stage.focus(this.mode === 'play' ? 'auto' : 'overview');
+    this.lastApplied = {};
+    stage.resize();
+  }
+
+  start(run: RunFile): void {
     const ro = new ResizeObserver(() => this.stage.resize());
     ro.observe(this.stageHost);
     this.setRun(run);
@@ -239,7 +260,7 @@ export class App {
       if (mode === 'agent') this.startRunPlay();
       else if (mode === 'compare') this.setPlaying(true);
     }
-    if (!this.params.clean && !this.params.mode && !heroDismissed()) {
+    if (!this.params.clean && !this.params.autoplay && !heroDismissed()) {
       showHero(
         run,
         () => {
@@ -863,12 +884,6 @@ export class App {
         this.stage.flashViolation(cell, v);
         if (this.mode === 'compare') {
           this.toasts.show(violationLine(v), 'bad', 4200, `${cell === 'A' ? 'Baseline' : 'Repaired'} · ${v.rule === 'DROP' ? 'box dropped' : RULE_TITLES[v.rule] ?? v.rule}`);
-        } else if (this.mode === 'agent') {
-          const key = `${this.traceKey}|${v.rule}|${v.t}`;
-          if (!this.toastedKeys.has(key)) {
-            this.toastedKeys.add(key);
-            this.toasts.show(violationLine(v), 'bad', 3600, `Program ${this.versionAt(this.stepIdx)} · ${v.rule === 'DROP' ? 'box dropped' : RULE_TITLES[v.rule] ?? v.rule}`);
-          }
         }
       }
     }

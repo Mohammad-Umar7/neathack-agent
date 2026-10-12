@@ -189,6 +189,7 @@ export class Analyzer {
     this.t1 = Math.max(windowS, last);
     this.t0 = this.t1 - windowS;
     this.t = Math.max(0, last - trace.dt);
+    this.timeEl.textContent = `${this.t.toFixed(1)} s`;
     this.showViewSwitch(false);
     if (firstLive) this.relayout();
     else {

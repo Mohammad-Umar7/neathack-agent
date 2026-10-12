@@ -18,9 +18,10 @@ async function boot(): Promise<void> {
   if (!run) return fail(root, `Could not load run "${runId}".`);
   const app = new App(lm, params);
   root.replaceChildren(app.root);
-  const { stage, real } = await loadStage(app.stageHost, { quality: params.quality, force2d: params.stage2d });
-  await app.start(stage, real, run);
+  app.start(run);
   (window as unknown as { stopProve: App }).stopProve = app;
+  const { stage, real } = await loadStage(app.stageHost, { quality: params.quality, force2d: params.stage2d });
+  app.setStage(stage, real);
 }
 
 boot().catch((e) => {

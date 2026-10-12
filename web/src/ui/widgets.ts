@@ -31,19 +31,23 @@ export class Scoreboard {
     if (ids !== Array.from(this.cards.keys()).join(',')) {
       this.el.replaceChildren();
       this.cards.clear();
+      const meta = h('div', { class: 'sc-meta' });
       for (const c of cards) {
         const val = h('span', { class: 'sc-val' });
         const from = h('span', { class: 'sc-from' });
         const sub = h('div', { class: 'sc-sub' });
-        const root = h('div', { class: `sc-card${c.big ? ' big' : ''}`, 'data-id': c.id }, h('div', { class: 'sc-label' }, c.label), h('div', { class: 'sc-row' }, from, val), sub);
-        this.el.append(root);
+        const root = c.big
+          ? h('div', { class: 'sc-card big', 'data-id': c.id }, h('div', { class: 'sc-label' }, c.label), h('div', { class: 'sc-row' }, from, val), sub)
+          : h('div', { class: 'sc-mi', 'data-id': c.id }, h('span', { class: 'sc-label' }, c.label), h('span', { class: 'sc-row' }, from, val));
+        (c.big ? this.el : meta).append(root);
         this.cards.set(c.id, { root, val, from, sub, last: null });
       }
+      if (meta.children.length) this.el.append(meta);
     }
     for (const c of cards) {
       const x = this.cards.get(c.id)!;
       const fmt = c.fmt ?? ((n: number) => fmtInt(n));
-      x.root.className = `sc-card${c.big ? ' big' : ''} tone-${c.tone ?? 'neutral'}`;
+      x.root.className = `${c.big ? 'sc-card big' : 'sc-mi'} tone-${c.tone ?? 'neutral'}`;
       x.from.innerHTML = c.from !== undefined && c.from !== null ? `${fmt(c.from)}${c.total !== undefined ? `<small>/${c.total}</small>` : ''}<i>→</i>` : '';
       const totalSuffix = c.total !== undefined ? `/${c.total}` : '';
       if (c.to === null) {
