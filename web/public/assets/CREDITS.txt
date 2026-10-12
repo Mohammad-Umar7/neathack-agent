@@ -1,0 +1,10 @@
+3D scene assets (all CC0 1.0, public domain), downloaded from Poly Haven (https://polyhaven.com):
+
+hdri/empty_warehouse_01_1k.hdr
+  "Empty Warehouse 01" by Sergej Majboroda - https://polyhaven.com/a/empty_warehouse_01 - CC0
+
+textures/hangar_concrete_floor_{diff,nor_gl,rough}_1k.jpg
+  "Hangar Concrete Floor" by Dimitrios Savva - https://polyhaven.com/a/hangar_concrete_floor - CC0
+
+All other textures (belt rubber, cardboard, labels, hazard tape, wire mesh, signage) are
+generated procedurally at runtime in web/src/scene/textures.ts.
