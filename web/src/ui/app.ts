@@ -144,7 +144,7 @@ export class App {
   // play mode
   private live: LiveSim | null = null;
   private playPanel: PlayPanel;
-  private progChoice: ProgramChoice = 'repaired';
+  private progChoice: ProgramChoice = new URLSearchParams(location.search).get('program') === 'baseline' ? 'baseline' : 'repaired';
   private custom: CustomProgram | null = null;
   private liveLadderKey = '';
 
