@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import type { Frame, GoldenTrace, Rung, Trace } from '../src/types';
 import { parseRung, rungToText } from '../src/sim/lang';
 import { runScenario } from '../src/sim/sim';
+import { CONVENTIONS } from '../src/sim/plant';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dir = process.env.GOLDEN_DIR ?? join(here, '..', 'public', 'data', 'golden');
@@ -77,9 +78,39 @@ function ensureAst(prog: Rung[]): Rung[] {
   return prog.map((r, i) => (r.expr ? r : parseRung(r.text, r.id ?? `R${String(i + 1).padStart(2, '0')}`)));
 }
 
+/** Quick pass/fail of one golden trace under the current CONVENTIONS. */
+function matches(g: GoldenTrace): boolean {
+  try {
+    const got = runScenario(ensureAst(g.program), g.scenario);
+    if (got.frames.length !== g.trace.frames.length) return false;
+    for (let k = 0; k < got.frames.length; k++) if (diffFrame(g.trace.frames[k], got.frames[k]).length) return false;
+    const vk = (t: Trace): string => t.violations.map((v) => `${v.rule}@${Number(v.t).toFixed(1)}`).join(',');
+    return vk(got) === vk(g.trace);
+  } catch {
+    return false;
+  }
+}
+
+/** Try every alternative reading of the spec; return the ones under which all the given traces match. */
+function suggestConventions(gs: GoldenTrace[]): string[] {
+  const saved = { ...CONVENTIONS };
+  const hits: string[] = [];
+  for (const firstBoxId of [1, 0])
+    for (const autopickExtraScans of [0, 1, -1])
+      for (const explicitSpawnResetsAutofeed of [false, true]) {
+        Object.assign(CONVENTIONS, { firstBoxId, autopickExtraScans, explicitSpawnResetsAutofeed });
+        if (gs.every(matches)) hits.push(JSON.stringify({ firstBoxId, autopickExtraScans, explicitSpawnResetsAutofeed }));
+      }
+  Object.assign(CONVENTIONS, saved);
+  return hits;
+}
+
+const all: GoldenTrace[] = [];
+
 let failed = 0;
 for (const f of files) {
   const g = JSON.parse(readFileSync(join(dir, f), 'utf8')) as GoldenTrace;
+  all.push(g);
   const exp: Trace = g.trace;
   let got: Trace;
   try {
@@ -124,4 +155,9 @@ for (const f of files) {
   }
 }
 console.log(`\n${files.length - failed}/${files.length} golden traces match.`);
+if (failed) {
+  const alt = suggestConventions(all);
+  if (alt.length) console.log(`All traces match if CONVENTIONS in src/sim/plant.ts = ${alt.join('  or  ')}`);
+  else console.log('No combination of CONVENTIONS fixes every trace: the difference is in the scan, plant or monitor logic (see the diffs above, --verbose for frame dumps).');
+}
 process.exit(failed ? 1 : 0);

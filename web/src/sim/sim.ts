@@ -6,7 +6,7 @@ import type { Frame, Rung, Scenario, ScenarioEvent, Trace, TraceEvent, Violation
 import { OUTPUT_NAMES } from './lang';
 import { Monitor } from './monitors';
 import { DT, Plc, initialInputs, type Bit } from './plc';
-import { Plant, type Sensor } from './plant';
+import { CONVENTIONS, Plant, type Sensor } from './plant';
 
 export const round1 = (x: number): number => Math.round(x * 10) / 10;
 
@@ -91,9 +91,10 @@ export class Sim {
     this.ev('set', setLabel(input, v));
   }
 
-  spawn(): boolean {
+  spawn(scripted = false): boolean {
     const b = this.plant.spawn();
     if (b) this.ev('spawn', 'Box placed on infeed');
+    if (b && scripted && CONVENTIONS.explicitSpawnResetsAutofeed) this.lastSpawnT = this.t;
     return !!b;
   }
 
@@ -123,7 +124,7 @@ export class Sim {
         if (e.input) this.set(e.input, (e.value ?? 1) as Bit);
         break;
       case 'spawn':
-        this.spawn();
+        this.spawn(true);
         break;
       case 'pick':
         this.pick();
@@ -167,7 +168,7 @@ export class Sim {
       const b = this.plant.atPick();
       if (b && this.lastOut.MOTOR === 0) {
         this.pickWait++;
-        if (this.pickWait * dt >= pickAfter - 1e-9) {
+        if (this.pickWait >= Math.round(pickAfter / dt) + CONVENTIONS.autopickExtraScans) {
           this.pick();
           this.pickWait = 0;
         }

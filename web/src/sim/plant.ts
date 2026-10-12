@@ -24,9 +24,19 @@ export const GEO = {
 
 export type Sensor = 'PE_IN' | 'PE_END';
 
+/**
+ * Details the written spec leaves open. The defaults are our best reading of agent/plc;
+ * scripts/parity.ts tries the alternatives when a golden trace disagrees and reports which one matches.
+ */
+export const CONVENTIONS = {
+  firstBoxId: 1, // id of the first box spawned
+  autopickExtraScans: 0, // autopick fires after round(N / dt) + this many waiting scans
+  explicitSpawnResetsAutofeed: false, // does a scripted spawn restart the autofeed interval?
+};
+
 export class Plant {
   boxes: PlantBox[] = [];
-  nextId = 1;
+  nextId = CONVENTIONS.firstBoxId;
   stuck: Partial<Record<Sensor, Bit>> = {};
 
   infeedClear(): boolean {
