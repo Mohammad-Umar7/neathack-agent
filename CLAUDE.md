@@ -29,8 +29,10 @@ Done:
 - uv environment on Python 3.11, the neatlogs SDK, and `agent/smoke.py`
 - Entire enabled for Claude Code (git-refs checkpoints, telemetry off, checkpoints push to origin). Its hooks only load when a session starts, so build in a session opened in this folder.
 
+Team **LastCommit**: Mohammad Umar (checked in, leader email `omerjamaljn@gmail.com`), Bilal Feroz Khan, Fuad Ahamed.
+
 Waiting on the user:
-- Finish web check-in (the team step), then verify the check-in email to get the LiteLLM key (Claude, Nova and others, $20 budget)
+- Bilal and Fuad finish web check-in (https://neatlogs.com/hackathon/check-in). Then the leader requests a code at https://neatlogs.com/hackathon/models and enters it to reveal the LiteLLM key (Claude and Nova, $20 shared budget). The AWS login arrives by email to the leader.
 - neatlogs: sign up at app.neatlogs.com, create a project, put the key in `.env`
 - cfo.ai: sign up (a card is required; the neatHack page says to cancel the subscription right away in Settings → Billing, and credits come from the neatHack team)
 - First #neatHack post on X
