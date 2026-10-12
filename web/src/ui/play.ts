@@ -206,6 +206,7 @@ export class PlayPanel {
   private pickSel: HTMLSelectElement;
   private scenarioBtns: HTMLButtonElement[] = [];
   private status: HTMLDivElement;
+  private guardShown: boolean | null = null;
 
   constructor(private hnd: PlayPanelHandlers) {
     const KEYS: Record<string, string> = { START: 'S', STOP: 'X', RESET: 'R' };
@@ -283,7 +284,8 @@ export class PlayPanel {
     const guardOpen = live.sim.inputs.GUARD_CLOSED === 0;
     this.estopBtn.classList.toggle('on', estop);
     this.guardBtn.classList.toggle('open', guardOpen);
-    this.guardBtn.innerHTML = `${ICONS.door}<span class="op-label">${guardOpen ? 'GUARD OPEN' : 'GUARD CLOSED'}<span class="kbd sm op-k">G</span></span>`;
+    if (this.guardShown !== guardOpen) this.guardBtn.innerHTML = `${ICONS.door}<span class="op-label">${guardOpen ? 'GUARD OPEN' : 'GUARD CLOSED'}<span class="kbd sm op-k">G</span></span>`;
+    this.guardShown = guardOpen;
     for (const c of ['START', 'STOP', 'RESET']) this.btns[c].classList.toggle('on', inp[c] === 1);
     const out = f?.out;
     const scriptName = live.script ? `Script: ${live.script.sc.title} · ` : '';

@@ -150,7 +150,10 @@ export class Analyzer {
     this.legendEl.replaceChildren(...legend.map((l) => h('span', { class: 'lg' }, h('i', { style: `background:${l.color}` }), l.label)));
   }
 
+  private playingShown: boolean | null = null;
   setPlaying(p: boolean): void {
+    if (this.playingShown === p) return;
+    this.playingShown = p;
     this.playBtn.innerHTML = p ? ICONS.pause : ICONS.play;
     this.playBtn.classList.toggle('on', p);
   }
