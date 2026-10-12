@@ -1,0 +1,1 @@
+STOP/PROVE: an agent that commissions PLC logic on a 3D digital twin, then proves the safety rules before anything touches a real machine. 2/16 → 16/16 held-out tests, 6/6 rules proven. #neatHack https://mohammad-umar7.github.io/neathack-agent/

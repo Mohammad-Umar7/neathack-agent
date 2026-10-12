@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>STOP/PROVE: demo</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face { font-family: 'Inter'; src: url('assets/fonts/Inter.woff2') format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Space Grotesk'; src: url('assets/fonts/SpaceGrotesk.woff2') format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'JetBrains Mono'; src: url('assets/fonts/JetBrainsMono.woff2') format('woff2'); font-weight: 100 900; }
+html, body { margin: 0; background: #07090c; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #07090c; color: #e7e9ee; font-family: 'Inter', sans-serif; }
+.vwrap { position: absolute; inset: 0; overflow: hidden; }
+.media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ov { position: absolute; inset: 0; display: flex; pointer-events: none; }
+.ov-inner { will-change: transform, opacity; }
+.ov-title { align-items: flex-start; justify-content: flex-start; padding: 84px 96px; }
+.ov-title .ov-inner { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 64px; line-height: 1.1; color: #f4f5f8; background: rgba(7,9,12,0.80); padding: 22px 32px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.10); max-width: 1180px; }
+.ov-center { align-items: center; justify-content: center; }
+.ov-center .ov-inner { text-align: center; }
+.ov-tag { align-items: flex-start; justify-content: flex-end; padding: 72px 96px; }
+.ov-tag .ov-inner { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 30px; color: #07090c; background: #f5c518; padding: 12px 22px; border-radius: 10px; }
+.ov-chip { align-items: flex-end; justify-content: flex-start; padding: 0 96px 190px; }
+.ov-chip .ov-inner { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 44px; color: #f4f5f8; background: rgba(7,9,12,0.86); border-left: 6px solid #f5c518; padding: 16px 28px; border-radius: 10px; }
+.framebg { display: flex; align-items: center; justify-content: center; padding-bottom: 110px; box-sizing: border-box; background: radial-gradient(ellipse at 50% 40%, #141922 0%, #07090c 70%); }
+.framed { width: 1720px; height: auto; border-radius: 14px; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+.ov-card { align-items: flex-start; justify-content: flex-end; padding-right: 80px; }
+.ov-card .ov-inner { width: 640px; font-family: 'Inter', sans-serif; font-size: 30px; line-height: 1.35; color: #e7e9ee; background: rgba(7,9,12,0.90); border: 1px solid rgba(245,197,24,0.45); border-radius: 14px; padding: 20px 26px; box-shadow: 0 18px 50px rgba(0,0,0,0.55); }
+.ov-card .ov-inner b { color: #f5c518; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 40px; display: block; margin-bottom: 4px; }
+.ov-end { align-items: center; justify-content: center; background: rgba(7,9,12,0.88); }
+.ov-end .ov-inner { text-align: center; }
+.url { margin-top: 30px; font-family: 'JetBrains Mono', monospace; font-size: 34px; color: #f5c518; }
+.wordmark { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 168px; letter-spacing: 2px; color: #f4f5f8; }
+.wordmark b { color: #f5c518; font-weight: 700; }
+.tagline { margin-top: 18px; font-size: 42px; color: #c9ced8; }
+.loop { margin-top: 56px; display: flex; gap: 18px; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 600; }
+.loop span { padding: 12px 22px; border: 1px solid rgba(245,197,24,0.55); border-radius: 999px; color: #f5c518; background: rgba(245,197,24,0.08); }
+.small { margin-top: 26px; font-size: 30px; color: #a3abb9; }
+.cap { position: absolute; left: 0; right: 0; bottom: 54px; display: flex; justify-content: center; pointer-events: none; }
+.cap span { max-width: 1500px; text-align: center; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 40px; line-height: 1.3; color: #ffffff; background: rgba(5,6,9,0.82); padding: 10px 24px; border-radius: 12px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="167.09">
+<div class="vwrap" id="w0"><video id="v0" class="media" src="assets/media/s1-hook.mp4" data-start="0.00" data-duration="9.26" data-track-index="0" muted playsinline></video></div>
+<audio id="vo0" src="assets/vo/s1-hook-b612d262cc.wav" data-start="0.35" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-title" data-start="0.60" data-duration="8.46" data-track-index="2"><div class="ov-inner" id="o0-0">The logic passed review.<br/>The box didn't.</div></div>
+<div class="clip cap" data-start="0.35" data-duration="2.54" data-track-index="3"><span>This conveyor just pushed a box off the end</span></div>
+<div class="clip cap" data-start="2.91" data-duration="3.82" data-track-index="3"><span>of the line. The control program had passed review.</span></div>
+<div class="clip cap" data-start="6.75" data-duration="1.84" data-track-index="3"><span>Nobody had tested the timing.</span></div>
+<div class="vwrap" id="w1"><video id="v1" class="media" src="assets/media/s2-problem.mp4" data-start="8.76" data-duration="18.49" data-track-index="0" muted playsinline></video></div>
+<audio id="vo1" src="assets/vo/s2-problem-0e84f77067.wav" data-start="9.61" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-chip" data-start="9.76" data-duration="5.20" data-track-index="2"><div class="ov-inner" id="o1-0">E-stop that clears itself</div></div>
+<div class="clip ov ov-chip" data-start="15.36" data-duration="5.40" data-track-index="2"><div class="ov-inner" id="o1-1">Restart when the guard closes</div></div>
+<div class="clip ov ov-chip" data-start="21.16" data-duration="5.60" data-track-index="2"><div class="ov-inner" id="o1-2">Stuck sensor nobody watches</div></div>
+<div class="clip cap" data-start="9.61" data-duration="3.10" data-track-index="3"><span>The bugs that slip through commissioning are the dangerous</span></div>
+<div class="clip cap" data-start="12.73" data-duration="3.18" data-track-index="3"><span>ones: an E-stop that clears itself,</span></div>
+<div class="clip cap" data-start="15.93" data-duration="3.02" data-track-index="3"><span>a belt that restarts when the guard closes,</span></div>
+<div class="clip cap" data-start="18.97" data-duration="2.94" data-track-index="3"><span>a sensor that sticks and nobody notices.</span></div>
+<div class="clip cap" data-start="21.93" data-duration="2.22" data-track-index="3"><span>And today they get found on site,</span></div>
+<div class="clip cap" data-start="24.17" data-duration="2.40" data-track-index="3"><span>next to real motors and real people.</span></div>
+<div class="clip vwrap" id="w2" data-start="26.75" data-duration="13.35" data-track-index="0"><img id="i2" class="media kb" src="assets/media/title-bg.png" alt=""></div>
+<audio id="vo2" src="assets/vo/s3-intro-2f08bafb24.wav" data-start="27.60" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-center" data-start="27.55" data-duration="12.35" data-track-index="2"><div class="ov-inner" id="o2-0"><div class="wordmark">STOP<b>/</b>PROVE</div><div class="tagline">An agent that commissions PLC logic, and proves it's safe.</div><div class="loop"><span>test</span><span>experiment</span><span>patch</span><span>prove</span><span>submit</span></div><div class="small">hidden faults · never told what they are</div></div></div>
+<div class="clip cap" data-start="27.60" data-duration="3.18" data-track-index="3"><span>STOP/PROVE does that job before the logic reaches</span></div>
+<div class="clip cap" data-start="30.80" data-duration="3.34" data-track-index="3"><span>the machine. It gets a program with hidden faults</span></div>
+<div class="clip cap" data-start="34.16" data-duration="1.42" data-track-index="3"><span>it is never told about,</span></div>
+<div class="clip cap" data-start="35.60" data-duration="1.34" data-track-index="3"><span>and has to find them,</span></div>
+<div class="clip cap" data-start="36.96" data-duration="2.48" data-track-index="3"><span>fix them, and prove the fix is safe.</span></div>
+<div class="vwrap" id="w3"><video id="v3" class="media" src="assets/media/s4-agent.mp4" data-start="39.60" data-duration="29.69" data-track-index="0" muted playsinline></video></div>
+<audio id="vo3" src="assets/vo/s4-agent-f4b1d64cb1.wav" data-start="40.45" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-tag" data-start="40.60" data-duration="4.00" data-track-index="2"><div class="ov-inner" id="o3-0">real run · claude-sonnet-4.6</div></div>
+<div class="clip cap" data-start="40.45" data-duration="1.10" data-track-index="3"><span>Here is a real run,</span></div>
+<div class="clip cap" data-start="41.57" data-duration="2.46" data-track-index="3"><span>with a crash we injected on purpose.</span></div>
+<div class="clip cap" data-start="44.05" data-duration="3.02" data-track-index="3"><span>The agent reads the rules and runs the tests.</span></div>
+<div class="clip cap" data-start="47.09" data-duration="1.42" data-track-index="3"><span>Two of eight pass.</span></div>
+<div class="clip cap" data-start="48.53" data-duration="2.38" data-track-index="3"><span>Its first call to the model checker crashes,</span></div>
+<div class="clip cap" data-start="50.93" data-duration="2.54" data-track-index="3"><span>so it digs into each failing test instead,</span></div>
+<div class="clip cap" data-start="53.49" data-duration="3.42" data-track-index="3"><span>scan by scan. Two patches get rejected,</span></div>
+<div class="clip cap" data-start="56.93" data-duration="3.26" data-track-index="3"><span>one for syntax and one for an invalid timer.</span></div>
+<div class="clip cap" data-start="60.21" data-duration="1.26" data-track-index="3"><span>It reads the errors,</span></div>
+<div class="clip cap" data-start="61.49" data-duration="3.10" data-track-index="3"><span>fixes them, and its next patch passes every test</span></div>
+<div class="clip cap" data-start="64.61" data-duration="2.54" data-track-index="3"><span>with all six safety rules proven.</span></div>
+<div class="clip cap" data-start="67.17" data-duration="1.44" data-track-index="3"><span>Only then does it submit.</span></div>
+<div class="vwrap" id="w4"><video id="v4" class="media" src="assets/media/s5-results.mp4" data-start="68.79" data-duration="20.11" data-track-index="0" muted playsinline></video></div>
+<audio id="vo4" src="assets/vo/s5-results-e65290727a.wav" data-start="69.64" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-tag" data-start="69.79" data-duration="4.00" data-track-index="2"><div class="ov-inner" id="o4-0">graded on what it never saw</div></div>
+<div class="clip cap" data-start="69.64" data-duration="1.74" data-track-index="3"><span>Then we grade the repair on what the agent</span></div>
+<div class="clip cap" data-start="71.40" data-duration="2.62" data-track-index="3"><span>never saw: sixteen held-out tests,</span></div>
+<div class="clip cap" data-start="74.04" data-duration="4.22" data-track-index="3"><span>three hundred random fuzz runs and the proofs.</span></div>
+<div class="clip cap" data-start="78.28" data-duration="3.26" data-track-index="3"><span>As delivered, the program passed two of sixteen.</span></div>
+<div class="clip cap" data-start="81.56" data-duration="2.38" data-track-index="3"><span>The repair passes all sixteen,</span></div>
+<div class="clip cap" data-start="83.96" data-duration="3.26" data-track-index="3"><span>proves all six safety rules and fixes all four</span></div>
+<div class="clip cap" data-start="87.24" data-duration="0.96" data-track-index="3"><span>hidden faults.</span></div>
+<div class="clip vwrap framebg" id="w5" data-start="88.39" data-duration="28.64" data-track-index="0"><img id="i5" class="framed" src="assets/media/neatlogs-trace.jpg" alt=""></div>
+<audio id="vo5" src="assets/vo/s6-traces-cde3fe637b.wav" data-start="89.24" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-tag" data-start="89.39" data-duration="6.50" data-track-index="2"><div class="ov-inner" id="o5-0">neatlogs</div></div>
+<div class="clip ov ov-card" style="padding-top: 120px" data-start="96.39" data-duration="20.44" data-track-index="2"><div class="ov-inner" id="o5-1"><b>1.17 → 0</b>failed actions per run, after a fix found in the traces</div></div>
+<div class="clip ov ov-card" style="padding-top: 330px" data-start="101.39" data-duration="15.44" data-track-index="2"><div class="ov-inner" id="o5-2"><b>$0.190 → $0.169</b>cost per run · 6 trials each</div></div>
+<div class="clip ov ov-card" style="padding-top: 540px" data-start="105.39" data-duration="11.44" data-track-index="2"><div class="ov-inner" id="o5-3"><b>3 of 6 runs</b>a patch passed every test but still broke a safety rule. The model checker caught it.</div></div>
+<div class="clip cap" data-start="89.24" data-duration="1.50" data-track-index="3"><span>Every run is traced in neatlogs:</span></div>
+<div class="clip cap" data-start="90.76" data-duration="3.34" data-track-index="3"><span>the workflow, each model call and each tool call,</span></div>
+<div class="clip cap" data-start="94.12" data-duration="2.06" data-track-index="3"><span>with tokens, latency and cost.</span></div>
+<div class="clip cap" data-start="96.20" data-duration="3.18" data-track-index="3"><span>The traces showed the agent wasting steps on rejected</span></div>
+<div class="clip cap" data-start="99.40" data-duration="2.46" data-track-index="3"><span>patches. We fixed the tool interface,</span></div>
+<div class="clip cap" data-start="101.88" data-duration="2.86" data-track-index="3"><span>and failed actions per run dropped from one point</span></div>
+<div class="clip cap" data-start="104.76" data-duration="2.46" data-track-index="3"><span>one seven to zero.</span></div>
+<div class="clip cap" data-start="107.24" data-duration="2.22" data-track-index="3"><span>They also showed why proofs matter:</span></div>
+<div class="clip cap" data-start="109.48" data-duration="1.66" data-track-index="3"><span>in three of six runs,</span></div>
+<div class="clip cap" data-start="111.16" data-duration="2.30" data-track-index="3"><span>a patch passed every test but still broke a</span></div>
+<div class="clip cap" data-start="113.48" data-duration="2.96" data-track-index="3"><span>safety rule, and only the model checker caught it.</span></div>
+<div class="clip vwrap framebg" id="w6" data-start="116.54" data-duration="17.93" data-track-index="0"><img id="i6" class="framed" src="assets/media/entire-commit.jpg" alt=""></div>
+<audio id="vo6" src="assets/vo/s7-entire-7967346803.wav" data-start="117.39" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-tag" data-start="117.54" data-duration="16.73" data-track-index="2"><div class="ov-inner" id="o6-0">Entire</div></div>
+<div class="clip cap" data-start="117.39" data-duration="2.30" data-track-index="3"><span>We built all of this with Claude Code under</span></div>
+<div class="clip cap" data-start="119.71" data-duration="4.06" data-track-index="3"><span>Entire. Entire records the coding agent&#x27;s session,</span></div>
+<div class="clip cap" data-start="123.79" data-duration="2.86" data-track-index="3"><span>the prompts, the reasoning and the changes,</span></div>
+<div class="clip cap" data-start="126.67" data-duration="2.62" data-track-index="3"><span>and links it to the commits it produced.</span></div>
+<div class="clip cap" data-start="129.31" data-duration="3.10" data-track-index="3"><span>This checkpoint trailer points to the full session that</span></div>
+<div class="clip cap" data-start="132.43" data-duration="1.44" data-track-index="3"><span>built STOP/PROVE.</span></div>
+<div class="clip vwrap framebg" id="w7" data-start="133.97" data-duration="20.62" data-track-index="0"><img id="i7" class="framed" src="assets/media/cfo-1.jpg" alt=""></div>
+<audio id="vo7" src="assets/vo/s8-cfo-f29ee0d21c.wav" data-start="134.82" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-tag" data-start="134.97" data-duration="19.42" data-track-index="2"><div class="ov-inner" id="o7-0">cfo.ai</div></div>
+<div class="clip cap" data-start="134.82" data-duration="1.18" data-track-index="3"><span>We planned the business in cfo.ai.</span></div>
+<div class="clip cap" data-start="136.02" data-duration="4.86" data-track-index="3"><span>Its AI CFO rebuilt our plan as a thirty-six</span></div>
+<div class="clip cap" data-start="140.90" data-duration="4.14" data-track-index="3"><span>month model: plans from five hundred dollars a month,</span></div>
+<div class="clip cap" data-start="145.06" data-duration="3.58" data-track-index="3"><span>three point four million in annual revenue by year</span></div>
+<div class="clip cap" data-start="148.66" data-duration="2.22" data-track-index="3"><span>three, and about two years of runway on a</span></div>
+<div class="clip cap" data-start="150.90" data-duration="3.04" data-track-index="3"><span>five hundred thousand dollar pre-seed.</span></div>
+<div class="vwrap" id="w8"><video id="v8" class="media" src="assets/media/s9-play.mp4" data-start="154.09" data-duration="13.00" data-track-index="0" muted playsinline></video></div>
+<audio id="vo8" src="assets/vo/s9-outro-a07dd44449.wav" data-start="154.94" data-track-index="5" data-volume="1"></audio>
+<div class="clip ov ov-end" data-start="161.19" data-duration="5.70" data-track-index="2"><div class="ov-inner" id="o8-0"><div class="wordmark">STOP<b>/</b>PROVE</div><div class="tagline">Commissioning you can prove.</div><div class="url">mohammad-umar7.github.io/neathack-agent</div><div class="small">github.com/Mohammad-Umar7/neathack-agent · Team LastCommit · #neatHack</div></div></div>
+<div class="clip cap" data-start="154.94" data-duration="1.50" data-track-index="3"><span>Try to break it yourself.</span></div>
+<div class="clip cap" data-start="156.46" data-duration="2.14" data-track-index="3"><span>Hit the E-stop, open the guard,</span></div>
+<div class="clip cap" data-start="158.62" data-duration="2.46" data-track-index="3"><span>jam a sensor, or rewrite a rung.</span></div>
+<div class="clip cap" data-start="161.10" data-duration="2.88" data-track-index="3"><span>STOP/PROVE. Commissioning you can prove.</span></div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#o0-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 0.60);
+tl.to("#o0-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 8.76);
+tl.fromTo("#w1", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 8.76);
+tl.fromTo("#o1-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 9.76);
+tl.to("#o1-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 14.66);
+tl.fromTo("#o1-1", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 15.36);
+tl.to("#o1-1", {opacity: 0, duration: 0.3, ease: "power1.in"}, 20.46);
+tl.fromTo("#o1-2", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 21.16);
+tl.to("#o1-2", {opacity: 0, duration: 0.3, ease: "power1.in"}, 26.46);
+tl.fromTo("#i2", {scale: 1}, {scale: 1.03, duration: 13.35, ease: "none"}, 26.75);
+tl.fromTo("#w2", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 26.75);
+tl.fromTo("#o2-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 27.55);
+tl.to("#o2-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 39.60);
+tl.fromTo("#w3", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 39.60);
+tl.fromTo("#o3-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 40.60);
+tl.to("#o3-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 44.30);
+tl.fromTo("#w4", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 68.79);
+tl.fromTo("#o4-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 69.79);
+tl.to("#o4-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 73.49);
+tl.fromTo("#i5", {scale: 1}, {scale: 1.05, duration: 28.64, ease: "none"}, 88.39);
+tl.fromTo("#w5", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 88.39);
+tl.fromTo("#o5-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 89.39);
+tl.to("#o5-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 95.59);
+tl.fromTo("#o5-1", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 96.39);
+tl.to("#o5-1", {opacity: 0, duration: 0.3, ease: "power1.in"}, 116.54);
+tl.fromTo("#o5-2", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 101.39);
+tl.to("#o5-2", {opacity: 0, duration: 0.3, ease: "power1.in"}, 116.54);
+tl.fromTo("#o5-3", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 105.39);
+tl.to("#o5-3", {opacity: 0, duration: 0.3, ease: "power1.in"}, 116.54);
+tl.fromTo("#i6", {scale: 1}, {scale: 1.04, duration: 17.93, ease: "none"}, 116.54);
+tl.fromTo("#w6", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 116.54);
+tl.fromTo("#o6-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 117.54);
+tl.to("#o6-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 133.97);
+tl.fromTo("#i7", {scale: 1}, {scale: 1.04, duration: 20.62, ease: "none"}, 133.97);
+tl.fromTo("#w7", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 133.97);
+tl.fromTo("#o7-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 134.97);
+tl.to("#o7-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 154.09);
+tl.fromTo("#w8", {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power1.inOut"}, 154.09);
+tl.fromTo("#o8-0", {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}, 161.19);
+tl.to("#o8-0", {opacity: 0, duration: 0.3, ease: "power1.in"}, 166.59);
+window.__timelines["main"] = tl;
+</script>
+</body>
+</html>
