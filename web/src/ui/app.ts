@@ -372,6 +372,8 @@ export class App {
     this.mode = m;
     this.root.dataset.mode = m;
     for (const [k, b] of Object.entries(this.tabs)) b.classList.toggle('on', k === m);
+    const leftTab = this.root.querySelector('.mobile-tabs [data-p="left"]');
+    if (leftTab) leftTab.textContent = m === 'agent' ? 'Steps' : m === 'compare' ? 'Scenarios' : 'Controls';
     this.stage.setInteractive(m === 'play');
     this.lastApplied = {};
     this.ladderFrameKey = '';
