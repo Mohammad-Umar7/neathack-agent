@@ -118,6 +118,7 @@ export interface ScenarioPair {
   description: string;
   baseline: Trace; // the program the agent was given
   repaired: Trace; // the program the agent submitted
+  scenario?: Scenario; // optional: the script itself, so the viewer can re-simulate it on any program version
 }
 
 export interface ProofResult {

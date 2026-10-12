@@ -1,12 +1,11 @@
 // Loading the agent export (web/public/data) with a fallback to the generated mock data,
 // plus defensive normalisation so a partial export never crashes the viewer.
 
-import type { EvalSummary, Manifest, Rung, RunFile, Scenario, ScenarioPair, SpecRule } from '../types';
+import type { EvalSummary, Manifest, Rung, RunFile, ScenarioPair, SpecRule } from '../types';
 import { baselineProgram } from '../sim/scenarios';
 
-export interface ScenarioPairX extends ScenarioPair {
-  scenario?: Scenario; // optional: the scripted scenario, lets the viewer re-simulate it
-}
+/** Kept as an alias: ScenarioPair now carries the optional scenario script itself. */
+export type ScenarioPairX = ScenarioPair;
 
 export interface LoadedManifest {
   manifest: Manifest;
