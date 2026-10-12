@@ -1,0 +1,38 @@
+{
+  "id": "v1-naive",
+  "variant": "v1",
+  "chaos": false,
+  "model": "claude-sonnet-4.6",
+  "backend": "openai",
+  "steps": 15,
+  "llm_calls": 7,
+  "duration_s": 33.3,
+  "tokens": {
+    "input": 23698,
+    "output": 3164
+  },
+  "cost_usd": 0.1186,
+  "visible": {
+    "pass": 8,
+    "total": 8
+  },
+  "heldout": {
+    "pass": 16,
+    "total": 16
+  },
+  "faults_fixed": {
+    "fixed": 4,
+    "total": 4,
+    "ids": [
+      "missing-reset",
+      "timing-race",
+      "stuck-sensor",
+      "auto-restart"
+    ]
+  },
+  "proven": 6,
+  "fuzz_bad_episodes": 0,
+  "errors": 2,
+  "recoveries": 1,
+  "rollbacks": 0
+}

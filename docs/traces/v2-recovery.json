@@ -1,0 +1,38 @@
+{
+  "id": "v2-recovery",
+  "variant": "v2",
+  "chaos": true,
+  "model": "claude-sonnet-4.6",
+  "backend": "openai",
+  "steps": 23,
+  "llm_calls": 9,
+  "duration_s": 37.6,
+  "tokens": {
+    "input": 61613,
+    "output": 3327
+  },
+  "cost_usd": 0.2347,
+  "visible": {
+    "pass": 8,
+    "total": 8
+  },
+  "heldout": {
+    "pass": 16,
+    "total": 16
+  },
+  "faults_fixed": {
+    "fixed": 4,
+    "total": 4,
+    "ids": [
+      "missing-reset",
+      "timing-race",
+      "stuck-sensor",
+      "auto-restart"
+    ]
+  },
+  "proven": 6,
+  "fuzz_bad_episodes": 0,
+  "errors": 3,
+  "recoveries": 2,
+  "rollbacks": 0
+}
