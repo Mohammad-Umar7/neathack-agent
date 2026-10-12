@@ -35,6 +35,9 @@ export class Timeline {
   private expanded = new Set<number>();
   private playBtn: HTMLButtonElement;
   private progress: HTMLDivElement;
+  private spark: HTMLDivElement;
+  private sparkCursor: SVGLineElement | null = null;
+  private sparkW = 300;
   private meta: HTMLDivElement;
   private typing: { el: HTMLElement; text: string; t0: number; i: number } | null = null;
   private typeRaf = 0;
@@ -47,12 +50,14 @@ export class Timeline {
     this.setPlaying(false);
     this.meta = h('div', { class: 'tl-meta' });
     this.progress = h('div', { class: 'tl-progress' }, h('i'));
+    this.spark = h('div', { class: 'tl-spark' });
     this.list = h('ol', { class: 'tl-list' });
     this.el = h(
       'div',
       { class: 'timeline' },
       h('div', { class: 'panel-head' }, h('div', { class: 'ph-title' }, h('span', { class: 'ph-kicker' }, 'Agent run'), h('span', { class: 'ph-name' }, 'Timeline')), this.playBtn),
       this.meta,
+      this.spark,
       this.progress,
       this.list,
     );
@@ -82,6 +87,7 @@ export class Timeline {
     this.items = run.steps.map((s, i) => this.renderStep(s, i));
     this.list.append(...this.items);
     this.setProgress(0);
+    this.renderSpark(run);
   }
 
   private renderStep(s: Step, i: number): HTMLLIElement {
@@ -172,5 +178,40 @@ export class Timeline {
 
   private setProgress(k: number): void {
     (this.progress.firstChild as HTMLElement).style.width = `${Math.round(k * 100)}%`;
+    if (this.sparkCursor && this.run) {
+      const n = Math.max(1, this.run.steps.length - 1);
+      const x = 4 + ((this.active < 0 ? 0 : this.active) / n) * (this.sparkW - 8);
+      this.sparkCursor.setAttribute('x1', String(x));
+      this.sparkCursor.setAttribute('x2', String(x));
+    }
+  }
+
+  /** Visible tests and proven rules across the run: the dip is the failed patch, the climb is the recovery. */
+  private renderSpark(run: RunFile): void {
+    const pts = run.steps.map((s) => s.metrics);
+    if (!pts.some(Boolean)) {
+      this.spark.replaceChildren();
+      this.sparkCursor = null;
+      return;
+    }
+    const W = this.sparkW;
+    const H = 34;
+    const n = Math.max(1, run.steps.length - 1);
+    const X = (i: number): number => 4 + (i / n) * (W - 8);
+    const Y = (v: number): number => H - 4 - v * (H - 10);
+    const series = (get: (m: NonNullable<Step['metrics']>) => number): string => {
+      let last: number | null = null;
+      const out: string[] = [];
+      run.steps.forEach((s, i) => {
+        if (s.metrics) last = get(s.metrics);
+        if (last !== null) out.push(`${X(i).toFixed(1)},${Y(last).toFixed(1)}`);
+      });
+      return out.join(' ');
+    };
+    const vis = series((m) => (m.visible_total ? m.visible_pass / m.visible_total : 0));
+    const prv = series((m) => (m.proof_total ? m.proven / m.proof_total : 0));
+    const errs = run.steps.map((s, i) => (s.kind === 'error' ? `<line x1="${X(i).toFixed(1)}" x2="${X(i).toFixed(1)}" y1="3" y2="${H - 3}" class="sp-err"/>` : '')).join('');
+    this.spark.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="4" x2="${W - 4}" y1="${Y(1)}" y2="${Y(1)}" class="sp-top"/><polyline points="${prv}" class="sp-prv"/><polyline points="${vis}" class="sp-vis"/>${errs}<line class="sp-cur" x1="4" x2="4" y1="2" y2="${H - 2}"/></svg><div class="sp-legend"><span class="v">visible tests</span><span class="p">rules proven</span>${errs ? '<span class="e">failed action</span>' : ''}</div>`;
+    this.sparkCursor = this.spark.querySelector('.sp-cur');
   }
 }
