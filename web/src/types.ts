@@ -83,6 +83,35 @@ export interface Trace {
   events: TraceEvent[];
 }
 
+/** A scripted test scenario: timed operator actions and plant events. Mirrors agent/plc/sim.py. */
+export interface ScenarioEvent {
+  t: number;
+  kind: 'press' | 'set' | 'spawn' | 'pick' | 'stick' | 'unstick';
+  input?: InputName; // press: momentary button; set: maintained input (ESTOP, GUARD_CLOSED)
+  value?: 0 | 1; // set / stick
+  duration?: number; // press: seconds held (default 0.3)
+  sensor?: 'PE_IN' | 'PE_END'; // stick / unstick
+}
+
+export interface Scenario {
+  id: string;
+  title: string;
+  description: string;
+  duration: number; // seconds
+  options?: {
+    autofeed_every?: number; // spawn a box every N s when the infeed is clear
+    autopick_after?: number; // pick a box N s after it stops at the pick position
+  };
+  events: ScenarioEvent[];
+}
+
+/** web/public/data/golden/<id>.json: a reference trace from the Python simulator, used to check the JS port. */
+export interface GoldenTrace {
+  program: Rung[];
+  scenario: Scenario;
+  trace: Trace;
+}
+
 export interface ScenarioPair {
   id: string;
   title: string;
