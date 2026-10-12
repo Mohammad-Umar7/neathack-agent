@@ -555,3 +555,11 @@ code, pre { font-family: var(--mono); }
 
 /* Before/After: the twin's cell labels sit at the top of the stage, so the scoreboard moves below */
 .app[data-mode='compare'] .center-top { flex-direction: column-reverse; }
+@media (max-width: 1400px) and (min-width: 1101px) {
+  .sc-meta { display: none; }
+}
+@media (max-height: 860px) {
+  .rules { max-height: 34%; }
+  .rl-desc { display: none; }
+  .ladder-legend { display: none; }
+}
