@@ -1,0 +1,49 @@
+{
+  "scenes": [
+    {
+      "id": "s1-hook",
+      "media": "out/test-compare.mp4",
+      "narration": "This conveyor just pushed a box off the end of the line. The control program had passed review. Nobody had tested the timing.",
+      "overlays": [{"style": "title", "at": 0.6, "html": "The logic passed review.<br/>The box didn't."}]
+    },
+    {
+      "id": "s2-problem",
+      "media": "out/test-compare.mp4",
+      "narration": "Every machine's control logic gets commissioned on site, next to real motors and real people. The bugs that slip through are the dangerous ones: an E-stop that clears itself, a belt that restarts when the guard closes, a sensor that sticks and nobody notices.",
+      "overlays": [
+        {"style": "chip", "at": 6.2, "hold": 2.6, "html": "E-stop that clears itself"},
+        {"style": "chip", "at": 8.9, "hold": 2.4, "html": "Restart when the guard closes"},
+        {"style": "chip", "at": 11.4, "hold": 2.6, "html": "Stuck sensor nobody watches"}
+      ]
+    },
+    {
+      "id": "s3-intro",
+      "media": "out/title-bg.png",
+      "zoom": 1.03,
+      "narration": "STOP PROVE is an agent that does that job before the logic reaches the machine. It gets a program with hidden faults it is never told about. It tests, experiments, patches, and then proves the safety rules with a model checker.",
+      "overlays": [{"style": "center", "at": 0.3, "html": "<div class=\"wordmark\">STOP<b>/</b>PROVE</div><div class=\"tagline\">An agent that commissions PLC logic, and proves it's safe.</div><div class=\"loop\"><span>test</span><span>experiment</span><span>patch</span><span>prove</span><span>submit</span></div><div class=\"small\">hidden faults · never told what they are</div>"}]
+    },
+    {
+      "id": "s4-agent",
+      "media": "out/test-compare.mp4",
+      "narration": "Here is a real run. The agent reads the operating rules and runs the tests. Two of eight pass. It pulls the shortest counterexample for each broken safety rule, works out which rung is wrong, and checks its idea on the digital twin. Then it patches. When an action fails, it reads the error and recovers. It only submits once every visible test passes and all six safety rules are proven."
+    },
+    {
+      "id": "s7-entire",
+      "media": "out/test-compare.mp4",
+      "narration": "We built all of this with Claude Code under Entire. Entire ties the coding agent's session to the git history: the prompts, the reasoning and the changes behind the commits, so anyone can trace this code back to the conversation that wrote it.",
+      "overlays": [{"style": "tag", "at": 0.5, "html": "Entire"}]
+    },
+    {
+      "id": "s8-cfo",
+      "media": "out/test-compare.mp4",
+      "narration": "We planned the business in cfo.ai. Integrators pay five hundred to two thousand dollars a month. The traces gave us the real cost of a verification run, which sets the gross margin. The model reaches three point four million in annual revenue by year three, with twenty-four months of runway from a five hundred thousand dollar pre-seed.",
+      "overlays": [{"style": "tag", "at": 0.5, "html": "cfo.ai"}]
+    },
+    {
+      "id": "s9-outro",
+      "media": "out/test-compare.mp4",
+      "narration": "Try to break it yourself. Hit the E-stop, open the guard, jam a sensor, or rewrite a rung. STOP PROVE. Commissioning you can prove."
+    }
+  ]
+}
