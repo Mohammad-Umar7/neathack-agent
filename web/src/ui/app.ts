@@ -2,6 +2,7 @@
 
 import type { Frame, Rung, RunFile, Scenario, Step, Trace, Violation } from '../types';
 import { runScenario } from '../sim/sim';
+import { rungEqual } from '../sim/lang';
 import { RULE_SCENARIO, SCENARIOS } from '../sim/scenarios';
 import { RULE_TITLES } from '../sim/monitors';
 import { Analyzer, violationLine, type AnalyzerView } from './analyzer';
@@ -416,9 +417,9 @@ export class App {
     if (typeof a.scenario === 'string' && defs.has(a.scenario)) return a.scenario;
     const rule = typeof a.rule === 'string' ? a.rule : null;
     if (rule && RULE_SCENARIO[rule]) return RULE_SCENARIO[rule];
-    const m = /\b(S[1-7])\b/.exec(`${s.title} ${s.kind === 'tool' && s.tool === 'prove' ? '' : ''}`);
-    if (m && s.kind !== 'tool') return RULE_SCENARIO[m[1]];
-    if (m && (s.tool === 'get_counterexample' || s.tool === 'simulate')) return RULE_SCENARIO[m[1]];
+    // a rule named in the title, unless the step is a bulk proof/test run
+    const m = /\b(S[1-7])\b/.exec(s.title);
+    if (m && (s.kind !== 'tool' || s.tool === 'get_counterexample' || s.tool === 'simulate')) return RULE_SCENARIO[m[1]];
     if (s.kind === 'error' || s.kind === 'submit') return 'production';
     return null;
   }
@@ -457,7 +458,7 @@ export class App {
       this.shownLadderKey = key;
       const prog = this.run.programs[ver];
       const baseProg = base ? this.run.programs[base] : null;
-      const changed = baseProg ? prog.filter((r) => !baseProg.some((b) => b.id === r.id && JSON.stringify(b.expr) === JSON.stringify(r.expr) && b.kind === r.kind && b.pt === r.pt)).map((r) => r.id) : [];
+      const changed = baseProg ? prog.filter((r) => !baseProg.some((b) => b.id === r.id && rungEqual(b, r))).map((r) => r.id) : [];
       this.ladder.render(prog, { base: baseProg, highlight: changed });
       this.ladderFrameKey = '';
       if (baseProg) requestAnimationFrame(() => this.ladder.revealChanges());
@@ -539,9 +540,11 @@ export class App {
       const rules = new Set<string>();
       if (typeof a.rule === 'string') rules.add(a.rule);
       if (Array.isArray(a.rules)) for (const r of a.rules) if (typeof r === 'string') rules.add(r);
-      if ((s.tool === 'prove' || s.tool === 'simulate') && s.ok) {
-        const all = rules.size ? rules : null;
-        for (const r of this.run.spec) if ((!all || all.has(r.id)) && (s.tool === 'prove' ? r.method === 'proof' || all?.has(r.id) : all?.has(r.id))) st[r.id] = repaired[r.id];
+      if (!s.ok || (s.tool !== 'prove' && s.tool !== 'simulate')) continue;
+      // a successful proof/simulation settles the rules it names (a bare prove settles every proof rule)
+      for (const r of this.run.spec) {
+        const named = rules.has(r.id);
+        if (named || (s.tool === 'prove' && rules.size === 0 && r.method === 'proof')) st[r.id] = repaired[r.id];
       }
     }
     return st;
