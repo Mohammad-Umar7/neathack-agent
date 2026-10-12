@@ -1,6 +1,6 @@
 # Agent runs: before / after
 
-All runs use `claude-sonnet-4.6` through the neatHack LiteLLM proxy and are traced in **neatlogs** (project `b546a6a0-fa85-4ff0-8f6c-517c1cf82964`). Every run records each LLM call and tool call with tokens, latency and cost: the workflow span wraps the run and each tool call gets a tool span (`agent/run.py`). The held-out tests, the 300 fuzz episodes and the proofs run after the agent submits; the agent never sees them.
+All runs use `claude-sonnet-4.6` through the neatHack LiteLLM proxy. The official runs in section 5 are traced in **neatlogs** (project `b546a6a0-fa85-4ff0-8f6c-517c1cf82964`). Every run records each LLM call and tool call with tokens, latency and cost: the workflow span wraps the run and each tool call gets a tool span (`agent/run.py`). The held-out tests, the 300 fuzz episodes and the proofs run after the agent submits; the agent never sees them.
 
 ## 1. The program: as delivered vs after the agent
 
@@ -14,7 +14,7 @@ All runs use `claude-sonnet-4.6` through the neatHack LiteLLM proxy and are trac
 
 ## 2. Improving the agent from its traces
 
-The first traced runs showed the agent wasting steps on **failed actions**: patches rejected because the model wrote `#` comments inside rungs, sent more than four edits, inserted a second rung for a coil instead of replacing it, or set a timer preset to 0 s to "disable" it. We changed the tool interface (the parser keeps a trailing `# comment` as the rung comment; the patch tool says how to replace, how to remove a timer, and to split large changes) and re-ran six independent trials of each agent.
+The step-by-step records of our first real runs (every tool call, error and token count, recorded before neatlogs was connected) showed the agent wasting steps on **failed actions**: patches rejected because the model wrote `#` comments inside rungs, sent more than four edits, inserted a second rung for a coil instead of replacing it, or set a timer preset to 0 s to "disable" it. We changed the tool interface (the parser keeps a trailing `# comment` as the rung comment; the patch tool says how to replace, how to remove a timer, and to split large changes) and re-ran six independent trials of each agent.
 
 | Agent v2, 6 runs each | Before the fix | After the fix |
 |---|---|---|
