@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T14:08:15+00:00",
+  "generated_at": "2026-10-12T14:27:17+00:00",
   "default_run": "v2-verified",
   "runs": [
     {
@@ -11,6 +11,11 @@
       "id": "v2-recovery",
       "label": "Agent v2 \u2014 injected crash, recovers",
       "file": "runs/v2-recovery.json"
+    },
+    {
+      "id": "v2-recovery-first",
+      "label": "Agent v2 \u2014 injected crash, first run (before the trace fix)",
+      "file": "runs/v2-recovery-first.json"
     },
     {
       "id": "v1-naive",

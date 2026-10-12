@@ -4,14 +4,14 @@
   "chaos": false,
   "model": "claude-sonnet-4.6",
   "backend": "openai",
-  "steps": 15,
-  "llm_calls": 7,
-  "duration_s": 33.3,
+  "steps": 19,
+  "llm_calls": 9,
+  "duration_s": 44.5,
   "tokens": {
-    "input": 23698,
-    "output": 3164
+    "input": 37315,
+    "output": 3753
   },
-  "cost_usd": 0.1186,
+  "cost_usd": 0.1682,
   "visible": {
     "pass": 8,
     "total": 8

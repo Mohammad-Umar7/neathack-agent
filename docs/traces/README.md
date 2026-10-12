@@ -1,6 +1,6 @@
 # Agent runs: before / after
 
-All runs use `claude-sonnet-4.6` through the neatHack LiteLLM proxy. Every run records each LLM call and tool call with tokens, latency and cost: the workflow span wraps the run and each tool call gets a tool span (`agent/run.py`). The held-out tests, the 300 fuzz episodes and the proofs run after the agent submits; the agent never sees them.
+All runs use `claude-sonnet-4.6` through the neatHack LiteLLM proxy and are traced in **neatlogs** (project `b546a6a0-fa85-4ff0-8f6c-517c1cf82964`). Every run records each LLM call and tool call with tokens, latency and cost: the workflow span wraps the run and each tool call gets a tool span (`agent/run.py`). The held-out tests, the 300 fuzz episodes and the proofs run after the agent submits; the agent never sees them.
 
 ## 1. The program: as delivered vs after the agent
 
@@ -43,12 +43,16 @@ Claude Sonnet 4.6 is strong enough that the naive agent (tests only, pass/fail a
 
 ## 5. Failure and recovery
 
-`v2-recovery` injects a crash into the first model-checker call (exit code 137). The agent noticed the failed action, kept investigating, recovered from two rejected patches, and still submitted a fully proven repair: [`v2-recovery.json`](v2-recovery.json), and in the viewer under the "injected crash" run.
+`v2-recovery` injects a crash into the first model-checker call (exit code 137). neatlogs flags it automatically as an **Execution Failed** detection on the `prove` tool span; the agent noticed the failed action, kept investigating through the test details, and still submitted a fully proven repair. The first recovery run (before the trace-driven fix) also hit two rejected patches and recovered from both; it is kept in the viewer as "first run".
 
-| Single runs exported to the viewer | v1-naive | v2-verified | v2-recovery |
-|---|---|---|---|
-| Held-out tests | 16/16 | 16/16 | 16/16 |
-| Rules proven | 6/6 | 6/6 | 6/6 |
-| Failed actions / recoveries | 2 / 1 | 1 / 1 | 3 / 2 |
-| Steps / LLM calls | 15 / 7 | 23 / 9 | 23 / 9 |
-| Cost | $0.12 | $0.25 | $0.23 |
+![neatlogs trace of the recovery run](../evidence/neatlogs-trace-recovery.jpg)
+
+| Traced runs (neatlogs + the viewer) | v1-naive | v2-verified | v2-recovery | v2-recovery, first run |
+|---|---|---|---|---|
+| Held-out tests | 16/16 | 16/16 | 16/16 | 16/16 |
+| Rules proven | 6/6 | 6/6 | 6/6 | 6/6 |
+| Failed actions / recoveries | 2 / 1 | 0 / 0 | 1 / 1 | 3 / 2 |
+| Steps / LLM calls | 19 / 9 | 15 / 6 | 19 / 7 | 23 / 9 |
+| Cost | $0.17 | $0.13 | $0.17 | $0.23 |
+
+![neatlogs traces list](../evidence/neatlogs-traces.jpg)
