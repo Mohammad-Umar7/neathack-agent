@@ -10,7 +10,7 @@ import { loadRun, type LoadedManifest, type ScenarioPairX } from './data';
 import { clamp, fmtDuration, fmtTokens, h, nodes } from './dom';
 import { ICONS } from './icons';
 import { LadderView, diffSummary, frameMemory, presets } from './ladder';
-import { EvidenceDrawer, ScenarioPicker, heroDismissed, showHero, wordmark } from './overlays';
+import { EvidenceDrawer, ScenarioPicker, heroDismissed, showHero, wordmark, type RunSummary } from './overlays';
 import { CustomProgram, LiveSim, PlayPanel, liveRuleStatuses, programFor, type ProgramChoice } from './play';
 import { Player, crossed, frameIndex, interpolate } from './player';
 import type { FocusTarget, Stage } from './stage';
@@ -309,12 +309,37 @@ export class App {
     this.rules.setSpec(run.spec);
     this.picker.setScenarios(run.scenarios);
     this.drawer.setRun(run, this.lm.isMock);
+    this.drawer.onFirstOpen = () => void this.loadRunSummaries();
     this.stepIdx = 0;
     this.shownLadderKey = '';
     this.custom = null;
     this.live = null;
     this.scenarioId = this.params.scenario && run.scenarios.some((s) => s.id === this.params.scenario) ? this.params.scenario : run.scenarios[0]?.id ?? '';
     document.title = `STOP/PROVE — ${run.label}`;
+  }
+
+  private async loadRunSummaries(): Promise<void> {
+    const rows: RunSummary[] = [];
+    for (const entry of this.lm.manifest.runs) {
+      const r = entry.id === this.run.id ? this.run : await loadRun(this.lm, entry.id);
+      if (!r) continue;
+      const pr = r.eval.repaired;
+      rows.push({
+        id: r.id,
+        label: r.label,
+        agent: r.agent,
+        model: r.model,
+        steps: r.steps.length,
+        failed: r.steps.filter((s) => s.kind === 'error').length,
+        tokens: r.tokens.input + r.tokens.output,
+        cost: r.cost_usd,
+        wall: r.duration_s,
+        heldout: pr.heldout.total ? `${pr.heldout.pass}/${pr.heldout.total}` : '—',
+        proven: pr.proofs.length ? `${pr.proofs.filter((p) => p.status === 'proven').length}/${pr.proofs.length}` : '—',
+        current: r.id === this.run.id,
+      });
+    }
+    this.drawer.setRuns(rows);
   }
 
   private async switchRun(id: string): Promise<void> {

@@ -443,6 +443,13 @@ code, pre { font-family: var(--mono); }
 .ev-txt b { font-weight: 600; font-size: 13px; }
 .ev-txt small { color: var(--text-3); font-size: 11.5px; }
 .ev-ext svg { width: 14px; height: 14px; color: var(--text-3); }
+.ev-table { width: 100%; border-collapse: collapse; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.ev-table th { text-align: left; font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.ev-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); color: var(--text-2); vertical-align: top; }
+.ev-table td b { display: block; color: var(--text); font-weight: 600; }
+.ev-table td small { display: block; font-size: 10px; color: var(--text-3); max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-table td small.bad { color: #fca5a5; }
+.ev-table tr.cur td { background: rgba(245, 197, 24, 0.05); }
 .hw-title { font-family: var(--display); font-size: 15px; margin: 14px 0 2px; }
 .hw { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .hw li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; }

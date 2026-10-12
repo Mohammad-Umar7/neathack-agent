@@ -91,9 +91,26 @@ export function showHero(run: RunFile, onWatch: () => void, onPlay: () => void):
 
 // ---------- Evidence drawer ----------
 
+export interface RunSummary {
+  id: string;
+  label: string;
+  agent: string;
+  model: string;
+  steps: number;
+  failed: number;
+  tokens: number;
+  cost: number;
+  wall: number;
+  heldout: string;
+  proven: string;
+  current: boolean;
+}
+
 export class EvidenceDrawer {
   readonly el: HTMLDivElement;
   private body: HTMLDivElement;
+  private runsSlot: HTMLDivElement = h('div', { class: 'ev-runs' });
+  onFirstOpen: (() => void) | null = null;
   constructor() {
     const x = h('button', { class: 'icon-btn', 'aria-label': 'Close' });
     x.innerHTML = ICONS.close;
@@ -103,6 +120,11 @@ export class EvidenceDrawer {
     this.el.querySelector('.drawer-scrim')!.addEventListener('click', () => this.close());
   }
   open(): void {
+    if (this.onFirstOpen) {
+      const f = this.onFirstOpen;
+      this.onFirstOpen = null;
+      f();
+    }
     this.el.classList.add('open');
     this.el.setAttribute('aria-hidden', 'false');
   }
@@ -114,6 +136,38 @@ export class EvidenceDrawer {
     if (this.el.classList.contains('open')) this.close();
     else this.open();
   }
+  /** Agent versions side by side (the before/after numbers behind the neatlogs traces). */
+  setRuns(rows: RunSummary[]): void {
+    if (!rows.length) {
+      this.runsSlot.replaceChildren();
+      return;
+    }
+    const head = ['Run', 'Steps', 'Tokens', 'Cost', 'Time', 'Held-out', 'Proven'];
+    const table = h(
+      'table',
+      { class: 'ev-table' },
+      h('thead', null, h('tr', null, ...head.map((x) => h('th', null, x)))),
+      h(
+        'tbody',
+        null,
+        ...rows.map((r) =>
+          h(
+            'tr',
+            { class: r.current ? 'cur' : '' },
+            h('td', { title: `${r.label} · ${r.model}` }, h('b', null, `agent ${r.agent}`), h('small', null, r.label)),
+            h('td', null, String(r.steps), r.failed ? h('small', { class: 'bad' }, `${r.failed} failed`) : null),
+            h('td', null, r.tokens >= 1000 ? `${(r.tokens / 1000).toFixed(1)}k` : String(r.tokens)),
+            h('td', null, `$${r.cost.toFixed(3)}`),
+            h('td', null, `${Math.round(r.wall)}s`),
+            h('td', null, r.heldout),
+            h('td', null, r.proven),
+          ),
+        ),
+      ),
+    );
+    this.runsSlot.replaceChildren(h('h3', { class: 'hw-title' }, rows.length > 1 ? 'Agent versions, before / after' : 'This run'), table);
+  }
+
   setRun(run: RunFile | null, isMock: boolean): void {
     const link = (href: string | undefined, svg: string, title: string, sub: string): HTMLElement =>
       href
@@ -127,6 +181,7 @@ export class EvidenceDrawer {
       link(run?.neatlogs_url, ICONS.trace, 'neatlogs trace', run?.neatlogs_url ? 'Every LLM and tool call of this run' : 'Trace link appears with the real run'),
       link(`${REPO_URL}/tree/main/docs/business-plan`, ICONS.chart, 'Business plan (cfo.ai)', 'Pricing, costs, revenue and runway'),
       link(`${REPO_URL}#readme`, ICONS.book, 'README', 'Setup and how to reproduce the run'),
+      this.runsSlot,
       h('h3', { class: 'hw-title' }, 'How it works'),
       h(
         'ol',
