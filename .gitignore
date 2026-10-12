@@ -23,3 +23,7 @@ Thumbs.db
 # agent run artifacts
 runs/
 *.log
+
+# web
+web/node_modules/
+web/dist/
