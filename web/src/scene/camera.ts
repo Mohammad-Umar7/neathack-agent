@@ -115,7 +115,7 @@ export class CameraRig {
       this.idle += dt;
       if (this.idle > 5) {
         this.controls.autoRotate = true;
-        this.controls.autoRotateSpeed = 0.12 * Math.sin(this.time * 0.11);
+        this.controls.autoRotateSpeed = 0.06 * Math.sin(this.time * 0.11);
       } else {
         this.controls.autoRotate = false;
       }

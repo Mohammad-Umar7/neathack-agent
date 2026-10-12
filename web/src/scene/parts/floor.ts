@@ -77,6 +77,26 @@ export function buildFloorStatic(root: THREE.Object3D, kit: Kit): void {
   pm.userData.noShadow = true;
   strip(root, kit.hazardMat, PANEL_X - 0.45, PANEL_Z + 0.25, PANEL_X + 0.45, PANEL_Z + 0.25, 0.035, 0.2);
 
+  // cable protector ramp from the console pedestal under the fence to the infeed leg
+  const ramp = (x0: number, z0: number, x1: number, z1: number) => {
+    const len = Math.hypot(x1 - x0, z1 - z0);
+    const shape = new THREE.Shape();
+    shape.moveTo(-0.07, 0);
+    shape.lineTo(0.07, 0);
+    shape.lineTo(0.035, 0.022);
+    shape.lineTo(-0.035, 0.022);
+    shape.closePath();
+    const g = new THREE.ExtrudeGeometry(shape, { depth: len, bevelEnabled: false });
+    const uv = g.getAttribute('uv') as THREE.BufferAttribute;
+    const pos = g.getAttribute('position') as THREE.BufferAttribute;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, pos.getZ(i) / 0.3, pos.getX(i) * 4 + 0.5);
+    const m = put(root, g, kit.hazardMat, x0, 0, z0);
+    m.rotation.y = Math.atan2(x1 - x0, z1 - z0);
+    m.userData.noShadow = true;
+  };
+  ramp(PANEL_X - 0.02, PANEL_Z - 0.2, PANEL_X - 0.02, FZ1 - 0.15);
+  ramp(PANEL_X - 0.02, FZ1 - 0.15, LEG_X[0] + 0.06, 0.42);
+
   // contact shadows
   blob(root, kit, 2.0, 0, 5.2, 1.5);
   for (const x of LEG_X) for (const z of [-0.33, 0.33]) blob(root, kit, x, z, 0.32, 0.32);

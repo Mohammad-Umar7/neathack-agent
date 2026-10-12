@@ -266,7 +266,7 @@ export class StageImpl implements Stage {
     const twin = this.layout === 'twin';
     const target = twin ? V(0, 0.55, 0.25) : V(-0.05, 0.7, 0.1);
     const dir = (twin ? V(2.2, 7.6, 16.0) : V(3.3, 5.0, 8.4)).normalize();
-    const halfW = twin ? 7.9 : 4.15;
+    const halfW = twin ? 8.3 : 4.2;
     const halfH = twin ? 2.6 : 2.5;
     const vfov = THREE.MathUtils.degToRad(this.camera.fov);
     const aspect = this.camera.aspect || 16 / 9;
