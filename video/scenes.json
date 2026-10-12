@@ -2,48 +2,151 @@
   "scenes": [
     {
       "id": "s1-hook",
-      "media": "out/test-compare.mp4",
+      "media": "out/s1-hook.mp4",
       "narration": "This conveyor just pushed a box off the end of the line. The control program had passed review. Nobody had tested the timing.",
-      "overlays": [{"style": "title", "at": 0.6, "html": "The logic passed review.<br/>The box didn't."}]
+      "overlays": [
+        {
+          "style": "title",
+          "at": 0.6,
+          "html": "The logic passed review.<br/>The box didn't."
+        }
+      ]
     },
     {
       "id": "s2-problem",
-      "media": "out/test-compare.mp4",
-      "narration": "Every machine's control logic gets commissioned on site, next to real motors and real people. The bugs that slip through are the dangerous ones: an E-stop that clears itself, a belt that restarts when the guard closes, a sensor that sticks and nobody notices.",
+      "media": "out/s2-problem.mp4",
+      "narration": "The bugs that slip through commissioning are the dangerous ones: an E-stop that clears itself, a belt that restarts when the guard closes, a sensor that sticks and nobody notices. And today they get found on site, next to real motors and real people.",
       "overlays": [
-        {"style": "chip", "at": 6.2, "hold": 2.6, "html": "E-stop that clears itself"},
-        {"style": "chip", "at": 8.9, "hold": 2.4, "html": "Restart when the guard closes"},
-        {"style": "chip", "at": 11.4, "hold": 2.6, "html": "Stuck sensor nobody watches"}
+        {
+          "style": "chip",
+          "at": 0.5,
+          "hold": 5.2,
+          "html": "E-stop that clears itself"
+        },
+        {
+          "style": "chip",
+          "at": 6.1,
+          "hold": 5.4,
+          "html": "Restart when the guard closes"
+        },
+        {
+          "style": "chip",
+          "at": 11.9,
+          "hold": 5.6,
+          "html": "Stuck sensor nobody watches"
+        }
       ]
     },
     {
       "id": "s3-intro",
       "media": "out/title-bg.png",
       "zoom": 1.03,
-      "narration": "STOP PROVE is an agent that does that job before the logic reaches the machine. It gets a program with hidden faults it is never told about. It tests, experiments, patches, and then proves the safety rules with a model checker.",
-      "overlays": [{"style": "center", "at": 0.3, "html": "<div class=\"wordmark\">STOP<b>/</b>PROVE</div><div class=\"tagline\">An agent that commissions PLC logic, and proves it's safe.</div><div class=\"loop\"><span>test</span><span>experiment</span><span>patch</span><span>prove</span><span>submit</span></div><div class=\"small\">hidden faults · never told what they are</div>"}]
+      "narration": "STOP PROVE does that job before the logic reaches the machine. It gets a program with hidden faults it is never told about, and has to find them, fix them, and prove the fix is safe.",
+      "overlays": [
+        {
+          "style": "center",
+          "at": 0.3,
+          "html": "<div class=\"wordmark\">STOP<b>/</b>PROVE</div><div class=\"tagline\">An agent that commissions PLC logic, and proves it's safe.</div><div class=\"loop\"><span>test</span><span>experiment</span><span>patch</span><span>prove</span><span>submit</span></div><div class=\"small\">hidden faults \u00b7 never told what they are</div>"
+        }
+      ]
     },
     {
       "id": "s4-agent",
-      "media": "out/test-compare.mp4",
-      "narration": "Here is a real run. The agent reads the operating rules and runs the tests. Two of eight pass. It pulls the shortest counterexample for each broken safety rule, works out which rung is wrong, and checks its idea on the digital twin. Then it patches. When an action fails, it reads the error and recovers. It only submits once every visible test passes and all six safety rules are proven."
+      "media": "out/s4-agent.mp4",
+      "narration": "Here is a real run, with a crash we injected on purpose. The agent reads the rules and runs the tests. Two of eight pass. Its first call to the model checker crashes, so it digs into each failing test instead, scan by scan. Two patches get rejected, one for syntax and one for an invalid timer. It reads the errors, fixes them, and its next patch passes every test with all six safety rules proven. Only then does it submit.",
+      "overlays": [
+        {
+          "style": "tag",
+          "at": 0.5,
+          "hold": 4.0,
+          "html": "real run \u00b7 claude-sonnet-4.6"
+        }
+      ]
+    },
+    {
+      "id": "s5-results",
+      "media": "out/s5-results.mp4",
+      "narration": "Then we grade the repair on what the agent never saw: sixteen held-out tests, three hundred random fuzz runs and the proofs. As delivered, the program passed two of sixteen. The repair passes all sixteen, proves all six safety rules and fixes all four hidden faults.",
+      "overlays": [
+        {
+          "style": "tag",
+          "at": 0.5,
+          "hold": 4.0,
+          "html": "graded on what it never saw"
+        }
+      ]
+    },
+    {
+      "id": "s6-traces",
+      "media": "out/neatlogs-trace.jpg",
+      "zoom": 1.05,
+      "narration": "Every run is traced in neatlogs: the workflow, each model call and each tool call, with tokens, latency and cost. The traces showed the agent wasting steps on rejected patches. We fixed the tool interface, and failed actions per run dropped from one point one seven to zero. They also showed why proofs matter: in three of six runs, a patch passed every test but still broke a safety rule, and only the model checker caught it.",
+      "overlays": [
+        {
+          "style": "tag",
+          "at": 0.5,
+          "hold": 6.5,
+          "html": "neatlogs"
+        },
+        {
+          "style": "card",
+          "at": 7.5,
+          "top": 120,
+          "html": "<b>1.17 \u2192 0</b>failed actions per run, after a fix found in the traces"
+        },
+        {
+          "style": "card",
+          "at": 12.5,
+          "top": 330,
+          "html": "<b>$0.190 \u2192 $0.169</b>cost per run \u00b7 6 trials each"
+        },
+        {
+          "style": "card",
+          "at": 16.5,
+          "top": 540,
+          "html": "<b>3 of 6 runs</b>a patch passed every test but still broke a safety rule. The model checker caught it."
+        }
+      ],
+      "frame": true
     },
     {
       "id": "s7-entire",
-      "media": "out/test-compare.mp4",
-      "narration": "We built all of this with Claude Code under Entire. Entire ties the coding agent's session to the git history: the prompts, the reasoning and the changes behind the commits, so anyone can trace this code back to the conversation that wrote it.",
-      "overlays": [{"style": "tag", "at": 0.5, "html": "Entire"}]
+      "media": "out/entire-commit.jpg",
+      "frame": true,
+      "narration": "We built all of this with Claude Code under Entire. Entire records the coding agent's session, the prompts, the reasoning and the changes, and links it to the commits it produced. This checkpoint trailer points to the full session that built STOP PROVE.",
+      "overlays": [
+        {
+          "style": "tag",
+          "at": 0.5,
+          "html": "Entire"
+        }
+      ]
     },
     {
       "id": "s8-cfo",
-      "media": "out/test-compare.mp4",
-      "narration": "We planned the business in cfo.ai. Integrators pay five hundred to two thousand dollars a month. The traces gave us the real cost of a verification run, which sets the gross margin. The model reaches three point four million in annual revenue by year three, with twenty-four months of runway from a five hundred thousand dollar pre-seed.",
-      "overlays": [{"style": "tag", "at": 0.5, "html": "cfo.ai"}]
+      "media": "out/cfo-1.jpg",
+      "frame": true,
+      "narration": "We planned the business in cfo.ai. Its AI CFO rebuilt our plan as a thirty-six month model: plans from five hundred dollars a month, three point four million in annual revenue by year three, and about two years of runway on a five hundred thousand dollar pre-seed.",
+      "overlays": [
+        {
+          "style": "tag",
+          "at": 0.5,
+          "html": "cfo.ai"
+        }
+      ]
     },
     {
       "id": "s9-outro",
-      "media": "out/test-compare.mp4",
-      "narration": "Try to break it yourself. Hit the E-stop, open the guard, jam a sensor, or rewrite a rung. STOP PROVE. Commissioning you can prove."
+      "media": "out/s9-play.mp4",
+      "min": 12.5,
+      "narration": "Try to break it yourself. Hit the E-stop, open the guard, jam a sensor, or rewrite a rung. STOP PROVE. Commissioning you can prove.",
+      "overlays": [
+        {
+          "style": "end",
+          "at": 6.6,
+          "html": "<div class=\"wordmark\">STOP<b>/</b>PROVE</div><div class=\"tagline\">Commissioning you can prove.</div><div class=\"url\">mohammad-umar7.github.io/neathack-agent</div><div class=\"small\">github.com/Mohammad-Umar7/neathack-agent \u00b7 Team LastCommit \u00b7 #neatHack</div>"
+        }
+      ]
     }
   ]
 }

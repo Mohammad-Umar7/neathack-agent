@@ -129,6 +129,11 @@ def build() -> None:
         if src.suffix.lower() in (".mp4", ".webm", ".mov"):
             parts.append(f'<div class="vwrap" id="{wid}"><video id="v{i}" class="media" src="{rel}" data-start="{vis_start:.2f}" '
                          f'data-duration="{vis_dur:.2f}" data-track-index="0" muted playsinline></video></div>')
+        elif sc.get("frame"):  # a browser screenshot, framed on the dark background
+            parts.append(f'<div class="clip vwrap framebg" id="{wid}" data-start="{vis_start:.2f}" data-duration="{vis_dur:.2f}" data-track-index="0">'
+                         f'<img id="i{i}" class="framed" src="{rel}" alt=""></div>')
+            z = sc.get("zoom", 1.04)
+            tl.append(f'tl.fromTo("#i{i}", {{scale: 1}}, {{scale: {z}, duration: {vis_dur:.2f}, ease: "none"}}, {vis_start:.2f});')
         else:
             parts.append(f'<div class="clip vwrap" id="{wid}" data-start="{vis_start:.2f}" data-duration="{vis_dur:.2f}" data-track-index="0">'
                          f'<img id="i{i}" class="media kb" src="{rel}" alt=""></div>')
@@ -144,7 +149,8 @@ def build() -> None:
             o_dur = ov.get("hold", dur - ov.get("at", 0.4) - 0.2)
             oid = f"o{i}-{j}"
             cls = ov.get("style", "title")
-            parts.append(f'<div class="clip ov ov-{cls}" data-start="{o_start:.2f}" data-duration="{o_dur:.2f}" data-track-index="2">'
+            pos = f' style="padding-top: {ov["top"]}px"' if "top" in ov else ""
+            parts.append(f'<div class="clip ov ov-{cls}"{pos} data-start="{o_start:.2f}" data-duration="{o_dur:.2f}" data-track-index="2">'
                          f'<div class="ov-inner" id="{oid}">{ov["html"]}</div></div>')
             tl.append(f'tl.fromTo("#{oid}", {{y: 24, opacity: 0}}, {{y: 0, opacity: 1, duration: 0.5, ease: "power3.out"}}, {o_start:.2f});')
             tl.append(f'tl.to("#{oid}", {{opacity: 0, duration: 0.3, ease: "power1.in"}}, {o_start + o_dur - 0.3:.2f});')
@@ -179,6 +185,14 @@ html, body {{ margin: 0; background: #07090c; }}
 .ov-tag .ov-inner {{ font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 30px; color: #07090c; background: #f5c518; padding: 12px 22px; border-radius: 10px; }}
 .ov-chip {{ align-items: flex-end; justify-content: flex-start; padding: 0 96px 190px; }}
 .ov-chip .ov-inner {{ font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 44px; color: #f4f5f8; background: rgba(7,9,12,0.86); border-left: 6px solid #f5c518; padding: 16px 28px; border-radius: 10px; }}
+.framebg {{ display: flex; align-items: center; justify-content: center; padding-bottom: 110px; box-sizing: border-box; background: radial-gradient(ellipse at 50% 40%, #141922 0%, #07090c 70%); }}
+.framed {{ width: 1720px; height: auto; border-radius: 14px; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }}
+.ov-card {{ align-items: flex-start; justify-content: flex-end; padding-right: 80px; }}
+.ov-card .ov-inner {{ width: 640px; font-family: 'Inter', sans-serif; font-size: 30px; line-height: 1.35; color: #e7e9ee; background: rgba(7,9,12,0.90); border: 1px solid rgba(245,197,24,0.45); border-radius: 14px; padding: 20px 26px; box-shadow: 0 18px 50px rgba(0,0,0,0.55); }}
+.ov-card .ov-inner b {{ color: #f5c518; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 40px; display: block; margin-bottom: 4px; }}
+.ov-end {{ align-items: center; justify-content: center; background: rgba(7,9,12,0.88); }}
+.ov-end .ov-inner {{ text-align: center; }}
+.url {{ margin-top: 30px; font-family: 'JetBrains Mono', monospace; font-size: 34px; color: #f5c518; }}
 .wordmark {{ font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 168px; letter-spacing: 2px; color: #f4f5f8; }}
 .wordmark b {{ color: #f5c518; font-weight: 700; }}
 .tagline {{ margin-top: 18px; font-size: 42px; color: #c9ced8; }}
