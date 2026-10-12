@@ -80,12 +80,27 @@ export class Scoreboard {
 
 // ---------- safety rules ----------
 
-export type RuleStatus = { status: 'proven' | 'violated' | 'tested' | 'failed' | 'pending' | 'live-ok' | 'live-bad'; note?: string };
+export type RuleStatus = {
+  status: 'proven' | 'violated' | 'tested' | 'failed' | 'pending' | 'live-ok' | 'live-bad';
+  note?: string;
+  cex?: ProofResult['counterexample']; // the model checker's counterexample, shown on click
+  cexLabel?: string;
+};
+
+interface CexRow {
+  id: string;
+  root: HTMLElement;
+  chip: HTMLElement;
+  note: HTMLElement;
+  cexEl: HTMLElement;
+  cex?: ProofResult['counterexample'];
+  cexLabel: string;
+}
 
 export class RulesList {
   readonly el: HTMLDivElement;
   private body: HTMLDivElement;
-  private rows = new Map<string, { root: HTMLElement; chip: HTMLElement; note: HTMLElement }>();
+  private rows = new Map<string, CexRow>();
   private heading: HTMLSpanElement;
 
   constructor() {
@@ -101,6 +116,7 @@ export class RulesList {
     for (const r of ordered) {
       const chip = h('span', { class: 'rl-chip' });
       const note = h('span', { class: 'rl-note' });
+      const cexEl = h('div', { class: 'rl-cex' });
       const root = h(
         'div',
         { class: `rl-row ${r.kind}`, title: r.text },
@@ -108,9 +124,28 @@ export class RulesList {
         h('div', { class: 'rl-text' }, h('div', { class: 'rl-name' }, r.title), h('div', { class: 'rl-desc' }, r.text)),
         h('div', { class: 'rl-status' }, chip, note),
       );
-      this.body.append(root);
-      this.rows.set(r.id, { root, chip, note });
+      this.body.append(root, cexEl);
+      const row: CexRow = { id: r.id, root, chip, note, cexEl, cexLabel: 'Counterexample' };
+      root.addEventListener('click', () => {
+        if (!row.cex) return;
+        if (row.cexEl.childElementCount) row.cexEl.replaceChildren();
+        else this.fillCex(row);
+      });
+      this.rows.set(r.id, row);
     }
+  }
+
+  /** The counterexample as a scan table: which inputs and outputs were on, the last scan breaks the rule. */
+  private fillCex(row: CexRow): void {
+    const cex = row.cex ?? [];
+    const on = (m: Record<string, number>): string => Object.entries(m).filter(([, v]) => v).map(([k]) => k).join(' ') || '·';
+    const rows = cex.map((s, i) =>
+      h('tr', { class: i === cex.length - 1 ? 'last' : '' }, h('td', null, `${Number(s.t).toFixed(1)}`), h('td', null, on(s.in)), h('td', null, on(s.out))),
+    );
+    row.cexEl.replaceChildren(
+      h('div', { class: 'cex-head' }, `${row.cexLabel} for ${row.id}: ${cex.length} scans, the last one breaks the rule`),
+      h('table', { class: 'cex-table' }, h('thead', null, h('tr', null, h('th', null, 't'), h('th', null, 'inputs on'), h('th', null, 'outputs on'))), h('tbody', null, ...rows)),
+    );
   }
 
   setHeading(s: string): void {
@@ -134,6 +169,11 @@ export class RulesList {
       row.chip.className = `rl-chip ${s.status}`;
       row.note.textContent = s.note ?? '';
       row.root.classList.toggle('bad', s.status === 'violated' || s.status === 'failed' || s.status === 'live-bad');
+      row.cex = s.cex?.length ? s.cex : undefined;
+      row.cexLabel = s.cexLabel ?? 'Counterexample';
+      row.root.classList.toggle('has-cex', !!row.cex);
+      if (!row.cex) row.cexEl.replaceChildren();
+      else if (row.cexEl.childElementCount) this.fillCex(row);
       if (changed && s.status !== 'pending') {
         row.chip.classList.remove('pop');
         void row.chip.offsetWidth;
@@ -153,7 +193,7 @@ export function statusesFromEval(spec: SpecRule[], ev: EvalSummary): Record<stri
       out[r.id] =
         p.status === 'proven'
           ? { status: 'proven', note: `${fmtInt(p.states_explored)} states` }
-          : { status: 'violated', note: p.counterexample ? `cex ${p.counterexample.length} scans` : `${fmtInt(p.states_explored)} states` };
+          : { status: 'violated', note: p.counterexample ? `cex ${p.counterexample.length} scans` : `${fmtInt(p.states_explored)} states`, cex: p.counterexample };
     } else {
       const n = ev.fuzz.by_rule[r.id] ?? 0;
       out[r.id] = n > 0 ? { status: 'failed', note: `${n}/${ev.fuzz.episodes} fuzz runs` } : { status: 'tested', note: r.kind === 'safety' ? `${ev.fuzz.episodes} fuzz runs` : 'simulation' };

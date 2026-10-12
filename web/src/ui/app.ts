@@ -671,7 +671,8 @@ export class App {
     requestAnimationFrame(() => this.ladder.revealChanges());
     const rb = statusesFromEval(this.run.spec, this.run.eval.baseline);
     const rr = statusesFromEval(this.run.spec, this.run.eval.repaired);
-    for (const id of Object.keys(rr)) if (rb[id] && rb[id].status !== rr[id].status) rr[id] = { ...rr[id], note: `was ${rb[id].status.toUpperCase()}` };
+    for (const id of Object.keys(rr))
+      if (rb[id] && rb[id].status !== rr[id].status) rr[id] = { ...rr[id], note: `was ${rb[id].status.toUpperCase()}`, cex: rb[id].cex, cexLabel: 'Baseline counterexample' };
     this.rules.setStatuses(rr);
     this.rules.setHeading('repaired vs baseline');
     this.scoreboard.set(this.finalCards());
