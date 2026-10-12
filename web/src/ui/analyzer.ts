@@ -328,6 +328,11 @@ export class Analyzer {
       c.globalAlpha = 1;
       c.fillStyle = '#aab3c2';
       c.fillText(label, 16, lane.y + lane.h / 2 + 0.5);
+      // waveforms are clipped to the plot area (never under the label column)
+      c.save();
+      c.beginPath();
+      c.rect(LW - 2, lane.y, this.w - LW - 8, lane.h);
+      c.clip();
       if (lane.kind === 'boxes') this.drawBoxes(c, lane, srcs);
       else
         srcs.forEach((s, si) => {
@@ -336,6 +341,13 @@ export class Analyzer {
           const color = twin ? TONE[s.tone] : SIG_COLOR[lane.name] ?? GROUP_COLOR[lane.group];
           if (lane.kind === 'timer') this.drawTimer(c, s, lane.name, y0, sub, s.pts?.[lane.name], color);
           else this.drawBit(c, s.trace.frames, lane, y0, sub, color);
+        });
+      c.restore();
+      if (twin && lane.kind === 'boxes')
+        srcs.forEach((s, si) => {
+          c.font = '600 8px JetBrains Mono, monospace';
+          c.fillStyle = TONE[s.tone];
+          c.fillText(s.tone.toUpperCase(), LW - 14, lane.y + (si + 0.5) * (lane.h / 2));
         });
       if (twin && lane.kind === 'bit') {
         c.font = '600 8px JetBrains Mono, monospace';
@@ -449,11 +461,6 @@ export class Analyzer {
         c.stroke();
       }
       c.setLineDash([]);
-      if (twin) {
-        c.font = '600 8px JetBrains Mono, monospace';
-        c.fillStyle = TONE[s.tone];
-        c.fillText(s.tone.toUpperCase(), LW - 14, y0 + sub / 2);
-      }
       const tracks = new Map<number, { t: number; x: number; state: string }[]>();
       for (const f of s.trace.frames) {
         if (f.t < this.t0 - 1 || f.t > this.t1) continue;
@@ -577,8 +584,10 @@ export class Analyzer {
     // playhead
     if (this.sources.length && this.t >= this.t0 && this.t <= this.t1) {
       const x = this.tx(this.t);
-      c.fillStyle = 'rgba(245,197,24,0.06)';
-      c.fillRect(LW, RULER, Math.max(0, x - LW), this.hgt - RULER);
+      if (!this.live) {
+        c.fillStyle = 'rgba(245,197,24,0.06)';
+        c.fillRect(LW, RULER, Math.max(0, x - LW), this.hgt - RULER);
+      }
       c.strokeStyle = '#f5c518';
       c.lineWidth = 1.5;
       c.beginPath();
