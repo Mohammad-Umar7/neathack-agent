@@ -357,15 +357,15 @@ export class LadderView {
           autocomplete: 'off',
           'aria-label': `Rung ${r.id}`,
         }) as HTMLInputElement;
+        let sent = false;
         const commit = (): void => {
-          if (input.value.trim() !== (r.text || rungToText(r))) opts.onEdit?.(r.id, input.value);
+          if (sent || input.value.trim() === (r.text || rungToText(r))) return;
+          sent = true;
+          opts.onEdit?.(r.id, input.value);
         };
         input.addEventListener('keydown', (e) => {
           e.stopPropagation();
-          if (e.key === 'Enter') {
-            commit();
-            input.blur();
-          }
+          if (e.key === 'Enter') commit();
           if (e.key === 'Escape') {
             input.value = r.text || rungToText(r);
             input.blur();
