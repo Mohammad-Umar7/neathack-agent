@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-10-12T11:06:45.672Z",
+  "default_run": "mock",
+  "runs": [
+    {
+      "id": "mock",
+      "label": "Sample run (mock data)",
+      "file": "run-mock.json"
+    }
+  ]
+}
