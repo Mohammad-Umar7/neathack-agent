@@ -36,6 +36,7 @@ export class Timeline {
   private playBtn: HTMLButtonElement;
   private progress: HTMLDivElement;
   private spark: HTMLDivElement;
+  private summary: HTMLLIElement | null = null;
   private sparkCursor: SVGLineElement | null = null;
   private sparkW = 300;
   private meta: HTMLDivElement;
@@ -86,6 +87,8 @@ export class Timeline {
     this.list.replaceChildren();
     this.items = run.steps.map((s, i) => this.renderStep(s, i));
     this.list.append(...this.items);
+    this.summary = this.renderSummary(run);
+    this.list.append(this.summary);
     this.setProgress(0);
     this.renderSpark(run);
   }
@@ -158,6 +161,7 @@ export class Timeline {
       li.classList.toggle('done', k < i);
       li.classList.toggle('future', k > i);
     });
+    this.summary?.classList.toggle('shown', i >= this.items.length - 1);
     if (prev !== i) {
       if (prev >= 0 && this.expanded.has(prev)) {
         this.expanded.delete(prev);
@@ -184,6 +188,28 @@ export class Timeline {
       this.sparkCursor.setAttribute('x1', String(x));
       this.sparkCursor.setAttribute('x2', String(x));
     }
+  }
+
+  /** Closing card: what the submitted program scored. Revealed when the last step is reached. */
+  private renderSummary(run: RunFile): HTMLLIElement {
+    const r = run.eval.repaired;
+    const b = run.eval.baseline;
+    const proven = r.proofs.filter((p) => p.status === 'proven').length;
+    const stat = (v: string, l: string): HTMLElement => h('div', { class: 'tls-stat' }, h('b', null, v), h('span', null, l));
+    return h(
+      'li',
+      { class: 'tl-summary' },
+      h('div', { class: 'tls-title', html: `${ICONS.prove}<span>Run complete · ${run.final_version} submitted</span>` }),
+      h(
+        'div',
+        { class: 'tls-grid' },
+        r.heldout.total ? stat(`${r.heldout.pass}/${r.heldout.total}`, `held-out tests (was ${b.heldout.pass})`) : null,
+        r.proofs.length ? stat(`${proven}/${r.proofs.length}`, 'safety rules proven') : null,
+        r.faults_fixed.total ? stat(`${r.faults_fixed.fixed}/${r.faults_fixed.total}`, 'seeded faults fixed') : null,
+        stat(String(r.fuzz.violations), `fuzz violations (was ${b.fuzz.violations})`),
+      ),
+      h('div', { class: 'tls-meta' }, `${run.steps.length} steps · ${fmtTokens(run.tokens.input + run.tokens.output)} tokens · $${run.cost_usd.toFixed(3)} · ${fmtDuration(run.duration_s)}`),
+    );
   }
 
   /** Visible tests and proven rules across the run: the dip is the failed patch, the climb is the recovery. */
