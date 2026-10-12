@@ -957,6 +957,23 @@ export class App {
 
   // ---------------- keyboard ----------------
 
+  /** Play mode: S start, X stop, R reset, K e-stop, G guard, B box, P pick, J jam PE_IN. */
+  private playHotkey(k: string): void {
+    const live = this.live;
+    if (!live) return;
+    const map: Record<string, () => void> = {
+      s: () => live.control('START'),
+      x: () => live.control('STOP'),
+      r: () => live.control('RESET'),
+      k: () => live.control('ESTOP'),
+      g: () => live.control('GUARD'),
+      b: () => live.sim.spawn(),
+      p: () => live.sim.pick(),
+      j: () => (live.sim.plant.stuck.PE_IN !== undefined ? live.sim.unstick('PE_IN') : live.sim.stick('PE_IN', 1)),
+    };
+    map[k]?.();
+  }
+
   private onKey(e: KeyboardEvent): void {
     const t = e.target as HTMLElement | null;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
@@ -993,6 +1010,9 @@ export class App {
       case 'f':
       case 'F':
         this.root.classList.toggle('theater');
+        break;
+      default:
+        if (this.mode === 'play' && this.live) this.playHotkey(e.key.toLowerCase());
         break;
       case 'Escape':
         this.drawer.close();

@@ -390,6 +390,8 @@ code, pre { font-family: var(--mono); }
 .op-btn.start { --c1: #4ade80; --c2: #15803d; --c3: #0c4a24; --glow: rgba(74, 222, 128, 0.7); }
 .op-btn.stop { --c1: #f3f4f6; --c2: #9ca3af; --c3: #4b5563; --glow: rgba(255, 255, 255, 0.5); }
 .op-btn.reset { --c1: #93c5fd; --c2: #2563eb; --c3: #1e3a8a; --glow: rgba(96, 165, 250, 0.7); }
+.op-k { margin-left: 5px; vertical-align: 1px; }
+.app.clean .op-k { display: none; }
 .op-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-2); }
 .op-estop { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: 0; padding: 0; }
 .op-estop .mush { width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fb7185, #b91c1c 60%, #7f1d1d); box-shadow: 0 0 0 5px #f5c518, 0 0 0 6px rgba(0, 0, 0, 0.5), 0 6px 0 7px #a16207, 0 12px 26px -6px rgba(0, 0, 0, 0.9); transition: transform 0.12s, box-shadow 0.2s; }
@@ -420,6 +422,7 @@ code, pre { font-family: var(--mono); }
 .pp-tip { display: flex; gap: 8px; margin: 2px 14px 16px; padding: 10px; border-radius: 9px; background: rgba(245, 197, 24, 0.05); border: 1px solid rgba(245, 197, 24, 0.18); font-size: 11.8px; line-height: 1.5; color: var(--text-2); }
 .pp-tip svg { width: 15px; height: 15px; flex: none; color: var(--brand); margin-top: 2px; }
 .pp-tip b { color: var(--text); }
+.pp-keys { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
 
 /* ---------- drawer ---------- */
 .drawer { position: fixed; inset: 0; z-index: 60; pointer-events: none; }

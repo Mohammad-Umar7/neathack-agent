@@ -208,15 +208,16 @@ export class PlayPanel {
   private status: HTMLDivElement;
 
   constructor(private hnd: PlayPanelHandlers) {
+    const KEYS: Record<string, string> = { START: 'S', STOP: 'X', RESET: 'R' };
     const press = (c: PanelControl, label: string, cls: string, hint: string): HTMLButtonElement => {
-      const b = h('button', { class: `op-btn ${cls}`, title: hint }, h('span', { class: 'op-cap' }), h('span', { class: 'op-label' }, label));
+      const b = h('button', { class: `op-btn ${cls}`, title: `${hint} (key ${KEYS[c]})` }, h('span', { class: 'op-cap' }), h('span', { class: 'op-label' }, label, h('span', { class: 'kbd sm op-k' }, KEYS[c])));
       b.addEventListener('click', () => hnd.control(c));
       this.btns[c] = b;
       return b;
     };
-    this.estopBtn = h('button', { class: 'op-estop', title: 'E-stop: push to latch, click again to twist-release' }, h('span', { class: 'mush' }), h('span', { class: 'op-label' }, 'E-STOP'));
+    this.estopBtn = h('button', { class: 'op-estop', title: 'E-stop: push to latch, click again to twist-release (key K)' }, h('span', { class: 'mush' }), h('span', { class: 'op-label' }, 'E-STOP', h('span', { class: 'kbd sm op-k' }, 'K')));
     this.estopBtn.addEventListener('click', () => hnd.control('ESTOP'));
-    this.guardBtn = h('button', { class: 'op-guard', title: 'Open or close the guard door around the robot' });
+    this.guardBtn = h('button', { class: 'op-guard', title: 'Open or close the guard door around the robot (key G)' });
     this.guardBtn.addEventListener('click', () => hnd.control('GUARD'));
     const act = (svg: string, label: string, on: () => void, title: string): HTMLButtonElement => {
       const b = h('button', { class: 'act-btn', title });
@@ -264,10 +265,10 @@ export class PlayPanel {
       h('div', { class: 'panel-head' }, h('div', { class: 'ph-title' }, h('span', { class: 'ph-kicker' }, 'Live digital twin'), h('span', { class: 'ph-name' }, 'Operator panel')), resetBtn),
       this.status,
       h('div', { class: 'op-panel' }, h('div', { class: 'op-row' }, press('START', 'START', 'start', 'Momentary START push-button'), press('STOP', 'STOP', 'stop', 'Momentary STOP push-button'), press('RESET', 'RESET', 'reset', 'Momentary RESET (acknowledge) push-button')), h('div', { class: 'op-row' }, this.estopBtn, this.guardBtn)),
-      h('div', { class: 'pp-section' }, h('div', { class: 'pp-title' }, 'Plant'), h('div', { class: 'act-grid' }, act(ICONS.box, 'Place box', () => hnd.spawn(), 'Put a box on the infeed (if it is clear)'), act(ICONS.hand, 'Robot pick', () => hnd.pick(), 'Robot picks the box at the pick position'), act(ICONS.eye, 'Stick PE_IN', () => hnd.stick('PE_IN'), 'Force the infeed photo-eye ON (a jam)'), act(ICONS.eye, 'Stick PE_END', () => hnd.stick('PE_END'), 'Force the pick-position photo-eye ON'), act(ICONS.restart, 'Unstick sensors', () => hnd.unstick(), 'Release forced sensors'))),
+      h('div', { class: 'pp-section' }, h('div', { class: 'pp-title' }, 'Plant'), h('div', { class: 'act-grid' }, act(ICONS.box, 'Place box', () => hnd.spawn(), 'Put a box on the infeed if it is clear (key B)'), act(ICONS.hand, 'Robot pick', () => hnd.pick(), 'Robot picks the box at the pick position (key P)'), act(ICONS.eye, 'Stick PE_IN', () => hnd.stick('PE_IN'), 'Force the infeed photo-eye ON, like a jam (key J toggles)'), act(ICONS.eye, 'Stick PE_END', () => hnd.stick('PE_END'), 'Force the pick-position photo-eye ON'), act(ICONS.restart, 'Unstick sensors', () => hnd.unstick(), 'Release forced sensors'))),
       h('div', { class: 'pp-section' }, h('div', { class: 'pp-title' }, 'Automation'), h('label', { class: 'pp-field' }, h('span', null, 'Auto-feed'), this.feedSel), h('label', { class: 'pp-field' }, h('span', null, 'Robot auto-pick'), this.pickSel)),
       h('div', { class: 'pp-section' }, h('div', { class: 'pp-title' }, 'Scripted scenarios', h('small', null, 'replayed live on the selected program')), scenarioList),
-      h('div', { class: 'pp-tip', html: `${ICONS.info}<span><b>Try to break it:</b> run the belt, open the guard door, then close it. Or E-stop, release, and press START. The baseline restarts by itself; the repaired program waits for you.</span>` }),
+      h('div', { class: 'pp-tip', html: `${ICONS.info}<span><b>Try to break it:</b> run the belt, open the guard door, then close it. Or E-stop, release, and press START. The baseline restarts by itself; the repaired program waits for you.<br><span class="pp-keys">Keys: S start · X stop · R reset · K e-stop · G guard · B box · P pick · J jam</span></span>` }),
     );
   }
 
@@ -282,7 +283,7 @@ export class PlayPanel {
     const guardOpen = live.sim.inputs.GUARD_CLOSED === 0;
     this.estopBtn.classList.toggle('on', estop);
     this.guardBtn.classList.toggle('open', guardOpen);
-    this.guardBtn.innerHTML = `${ICONS.door}<span class="op-label">${guardOpen ? 'GUARD OPEN' : 'GUARD CLOSED'}</span>`;
+    this.guardBtn.innerHTML = `${ICONS.door}<span class="op-label">${guardOpen ? 'GUARD OPEN' : 'GUARD CLOSED'}<span class="kbd sm op-k">G</span></span>`;
     for (const c of ['START', 'STOP', 'RESET']) this.btns[c].classList.toggle('on', inp[c] === 1);
     const out = f?.out;
     const scriptName = live.script ? `Script: ${live.script.sc.title} · ` : '';
