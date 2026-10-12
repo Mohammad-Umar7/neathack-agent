@@ -120,6 +120,20 @@ export class CameraRig {
         this.controls.autoRotate = false;
       }
     }
+    // keep the orbit target near the cells so panning can never lose the scene
+    const t = this.controls.target;
+    const cx = THREE.MathUtils.clamp(t.x, -11, 11);
+    const cy = THREE.MathUtils.clamp(t.y, 0, 3.5);
+    const cz = THREE.MathUtils.clamp(t.z, -7, 7);
+    if (cx !== t.x || cy !== t.y || cz !== t.z) {
+      const dx = cx - t.x;
+      const dy = cy - t.y;
+      const dz = cz - t.z;
+      t.set(cx, cy, cz);
+      this.camera.position.x += dx;
+      this.camera.position.y += dy;
+      this.camera.position.z += dz;
+    }
     this.controls.update(dt);
   }
 

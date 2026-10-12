@@ -99,7 +99,7 @@ export class BoxField {
         if (vis.state !== 'belt') {
           // (re)appear on the belt; scrubbing backwards also lands here
           if (vis.state === 'placed') this.unplace(vis);
-          if (vis.state === 'carried') this.gantry.reset();
+          if (vis.state === 'carried') this.cancelCarried();
           vis.state = 'belt';
           vis.group.visible = true;
           vis.ring.visible = false;
@@ -138,6 +138,12 @@ export class BoxField {
       if (b.seen && b.state === 'floor') b.linger = 0;
     }
     return beltXs;
+  }
+
+  /** Abort the gantry and drop any box it was holding (replay moved backwards). */
+  private cancelCarried(): void {
+    this.gantry.reset();
+    for (const b of this.boxes.values()) if (b.state === 'carried') this.hide(b);
   }
 
   private unplace(b: BoxVis): void {

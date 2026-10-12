@@ -172,7 +172,7 @@ export class StageImpl implements Stage {
     if (target === 'auto') {
       const [p, t] = this.overviewPose();
       const off = p.clone().sub(t);
-      const radius = Math.hypot(off.x, off.z) * 0.92;
+      const radius = Math.hypot(off.x, off.z) * (this.layout === 'twin' ? 1.08 : 0.94);
       this.rig.startAuto(t.clone().setY(t.y + 0.1), radius, t.y + off.y * 0.82);
       return;
     }
