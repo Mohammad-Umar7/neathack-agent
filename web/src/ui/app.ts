@@ -64,6 +64,15 @@ const NULL_STAGE: Stage = {
   dispose() {},
 };
 
+/** ", 2 picked, 1 dropped" for a trace's final frame. */
+function boxLine(tr: Trace): string {
+  const last = tr.frames[tr.frames.length - 1];
+  if (!last) return '';
+  const picked = last.boxes.filter((b) => b.state === 'picked').length;
+  const dropped = last.boxes.filter((b) => b.state === 'dropped').length;
+  return `${picked ? `, ${picked} picked` : ''}${dropped ? `, ${dropped} dropped` : ''}`;
+}
+
 /** What happened to the boxes in a trace: picked, dropped, and whether the cell ended up faulted. */
 function outcomeChips(tr: Trace): HTMLElement[] {
   const last = tr.frames[tr.frames.length - 1];
@@ -745,8 +754,8 @@ export class App {
     this.caption.replaceChildren(
       h('span', { class: 'cap-k' }, 'Scenario'),
       h('b', null, p.title),
-      h('span', { class: `cap-chip ${nA ? 'bad' : 'good'}` }, `A: ${nA ? `${nA} violation${nA > 1 ? 's' : ''}` : 'clean'}`),
-      h('span', { class: `cap-chip ${nB ? 'bad' : 'good'}` }, `B: ${nB ? `${nB} violation${nB > 1 ? 's' : ''}` : 'clean'}`),
+      h('span', { class: `cap-chip ${nA ? 'bad' : 'good'}` }, `A: ${nA ? `${nA} violation${nA > 1 ? 's' : ''}` : 'clean'}${boxLine(p.baseline)}`),
+      h('span', { class: `cap-chip ${nB ? 'bad' : 'good'}` }, `B: ${nB ? `${nB} violation${nB > 1 ? 's' : ''}` : 'clean'}${boxLine(p.repaired)}`),
     );
     if (userPick) this.setPlaying(true);
     this.updateUrl();
