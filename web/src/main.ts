@@ -1,10 +1,29 @@
-import type { Manifest } from './types';
+import './styles/main.css';
+import { App, readParams } from './ui/app';
+import { loadManifest, loadRun } from './ui/data';
+import { h } from './ui/dom';
+import { loadStage } from './ui/stage';
 
-async function boot(): Promise<void> {
-  const app = document.getElementById('app')!;
-  const res = await fetch('./data/manifest.json');
-  const manifest: Manifest | null = res.ok ? await res.json() : null;
-  app.textContent = manifest ? `STOP/PROVE: ${manifest.runs.length} runs` : 'STOP/PROVE';
+function fail(root: HTMLElement, msg: string): void {
+  root.replaceChildren(h('div', { class: 'boot-error' }, h('b', null, 'STOP/PROVE'), h('p', null, msg)));
 }
 
-boot();
+async function boot(): Promise<void> {
+  const root = document.getElementById('app')!;
+  const params = readParams();
+  const lm = await loadManifest(params.mock);
+  if (!lm) return fail(root, 'No run data found in data/manifest.json or data/mock/manifest.json.');
+  const runId = params.run && lm.manifest.runs.some((r) => r.id === params.run) ? params.run : lm.manifest.default_run;
+  const run = await loadRun(lm, runId);
+  if (!run) return fail(root, `Could not load run "${runId}".`);
+  const app = new App(lm, params);
+  root.replaceChildren(app.root);
+  const { stage, real } = await loadStage(app.stageHost, { quality: params.quality, force2d: params.stage2d });
+  await app.start(stage, real, run);
+  (window as unknown as { stopProve: App }).stopProve = app;
+}
+
+boot().catch((e) => {
+  console.error(e);
+  fail(document.getElementById('app')!, `Something went wrong while starting: ${String(e)}`);
+});
