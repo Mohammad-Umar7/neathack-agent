@@ -1039,6 +1039,9 @@ export class App {
       case 'F':
         this.root.classList.toggle('theater');
         break;
+      case '?':
+        this.toasts.show('Space play/pause · ←/→ step · 1/2/3 modes · F theater · E evidence. Play mode: S start · X stop · R reset · K e-stop · G guard · B box · P pick · J jam', 'info', 7000, 'Keyboard');
+        break;
       default:
         if (this.mode === 'play' && this.live) this.playHotkey(e.key.toLowerCase());
         break;
