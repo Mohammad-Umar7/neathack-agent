@@ -72,6 +72,7 @@ code, pre { font-family: var(--mono); }
   bottom: calc(var(--bottom-h) + var(--gap) * 2);
   transition: left 0.35s var(--ease), right 0.35s var(--ease), bottom 0.35s var(--ease);
 }
+.app .stage-host { position: fixed; }
 .stage-host { border-radius: var(--radius); overflow: hidden; background: radial-gradient(ellipse at 50% 60%, #121721 0%, #0a0d12 70%); border: 1px solid var(--line); }
 .stage-host > canvas { display: block; width: 100%; height: 100%; }
 .stage-vignette { pointer-events: none; border-radius: var(--radius); box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04); }
@@ -224,7 +225,7 @@ code, pre { font-family: var(--mono); }
 .rung-svg .lbl.sm { font-size: 8.8px; }
 .rung-svg .lbl.in { fill: #c7d2e0; }
 .rung-svg .lbl.out { fill: #86efac; }
-.rung-svg .lbl.coil { fill: #fcd34d; }
+.rung-svg .lbl.cl { fill: #fcd34d; }
 .rung-svg .lbl.tmr { fill: #c4b5fd; }
 .rung-svg .coil { fill: none; stroke: #8b94a5; stroke-width: 2.2; transition: stroke 0.12s; }
 .rung-svg .coil-fill { fill: transparent; transition: fill 0.12s; }

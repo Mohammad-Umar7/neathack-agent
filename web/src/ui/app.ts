@@ -639,7 +639,7 @@ export class App {
     return [
       { id: 'heldout', label: 'Held-out tests', big: true, from: b.heldout.pass, to: r.heldout.pass, total: r.heldout.total, tone: 'good', sub: 'never seen by the agent' },
       { id: 'proven', label: 'Safety rules proven', big: true, from: proven(b), to: proven(r), total: r.proofs.length, tone: 'good', sub: 'model checker' },
-      { id: 'fuzz', label: 'Fuzz runs with violations', big: true, from: b.fuzz.violations, to: r.fuzz.violations, tone: r.fuzz.violations ? 'bad' : 'good', sub: `of ${r.fuzz.episodes || b.fuzz.episodes} random episodes` },
+      { id: 'fuzz', label: 'Fuzz violations', big: true, from: b.fuzz.violations, to: r.fuzz.violations, tone: r.fuzz.violations ? 'bad' : 'good', sub: `of ${r.fuzz.episodes || b.fuzz.episodes} random episodes` },
       { id: 'faults', label: 'Seeded faults fixed', big: true, to: r.faults_fixed.fixed, total: r.faults_fixed.total, tone: 'good', sub: 'hidden from the agent' },
       { id: 'steps', label: 'Agent steps', to: this.run.steps.length },
       { id: 'tokens', label: 'Tokens', to: this.run.tokens.input + this.run.tokens.output, fmt: fmtTokens },

@@ -43,7 +43,7 @@ type Net = { k: 'lit'; lit: Lit } | { k: 'ser'; items: Net[] } | { k: 'par'; ite
 function nameClass(n: string): string {
   if (isInput(n)) return 'in';
   if (isOutput(n)) return 'out';
-  return 'coil';
+  return 'cl'; // internal coil (not 'coil': that class styles the coil symbol)
 }
 
 function toNet(e: Expr, neg = false): Net {

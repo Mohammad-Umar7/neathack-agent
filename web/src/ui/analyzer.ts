@@ -253,7 +253,7 @@ export class Analyzer {
     laneH = Math.max(twin ? 16 : 11, Math.min(twin ? 30 : 22, laneH));
     let y = RULER + EVENTS;
     this.lanes = names.map((l) => {
-      const hh = l.kind === 'boxes' ? Math.max(boxesH, this.hgt - y - 4) : laneH;
+      const hh = l.kind === 'boxes' ? Math.max(boxesH, Math.min(this.hgt - y - 4, boxesH * 2.4)) : laneH;
       const lane = { ...l, h: hh, y };
       y += hh;
       return lane;
