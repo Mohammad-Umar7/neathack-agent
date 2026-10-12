@@ -47,13 +47,19 @@ export class Scoreboard {
     for (const c of cards) {
       const x = this.cards.get(c.id)!;
       const fmt = c.fmt ?? ((n: number) => fmtInt(n));
-      x.root.className = `${c.big ? 'sc-card big' : 'sc-mi'} tone-${c.tone ?? 'neutral'}`;
+      const keep = x.root.classList.contains('reveal') ? ' reveal' : '';
+      x.root.className = `${c.big ? 'sc-card big' : 'sc-mi'} tone-${c.tone ?? 'neutral'}${keep}`;
       x.from.innerHTML = c.from !== undefined && c.from !== null ? `${fmt(c.from)}${c.total !== undefined ? `<small>/${c.total}</small>` : ''}<i>→</i>` : '';
       const totalSuffix = c.total !== undefined ? `/${c.total}` : '';
       if (c.to === null) {
         x.val.textContent = '—';
         x.last = null;
       } else if (animate && x.last !== c.to) {
+        if (x.last === null && x.root.dataset.seen === '1') {
+          x.root.classList.remove('reveal');
+          void x.root.offsetWidth;
+          x.root.classList.add('reveal');
+        }
         const start = x.last ?? c.from ?? 0;
         countUp(x.val, start, c.to, x.last === null ? 1100 : 600, (n) => `${fmt(n)}${totalSuffix}`);
         if (x.last !== null) {
@@ -67,6 +73,7 @@ export class Scoreboard {
         x.last = c.to;
       }
       x.sub.textContent = c.sub ?? '';
+      x.root.dataset.seen = '1';
     }
   }
 }

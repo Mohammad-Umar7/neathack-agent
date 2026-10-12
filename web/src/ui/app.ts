@@ -28,6 +28,7 @@ export interface Params {
   stage2d: boolean;
   quality: 'high' | 'low';
   mock: boolean;
+  theater: boolean;
 }
 
 export function readParams(): Params {
@@ -45,6 +46,7 @@ export function readParams(): Params {
     stage2d: q.get('stage') === '2d',
     quality: q.get('quality') === 'low' ? 'low' : 'high',
     mock: q.get('mock') === '1',
+    theater: q.get('theater') === '1',
   };
 }
 
@@ -217,7 +219,7 @@ export class App {
 
     this.root = h(
       'div',
-      { class: `app${params.clean ? ' clean' : ''}`, 'data-mpanel': 'stage' },
+      { class: `app${params.clean ? ' clean' : ''}${params.theater ? ' theater' : ''}`, 'data-mpanel': 'stage' },
       h('div', { class: 'bg' }),
       this.stageHost,
       h('div', { class: 'stage-vignette' }),
@@ -974,6 +976,10 @@ export class App {
       case 'e':
       case 'E':
         this.drawer.toggle();
+        break;
+      case 'f':
+      case 'F':
+        this.root.classList.toggle('theater');
         break;
       case 'Escape':
         this.drawer.close();
