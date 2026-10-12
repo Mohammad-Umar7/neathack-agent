@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-runs = {p.stem: json.loads(p.read_text()) for p in sorted((ROOT / "docs" / "traces").glob("*.json"))}
+runs = {p.stem: json.loads(p.read_text()) for p in sorted((ROOT / "docs" / "traces").glob("*.json")) if not p.stem.startswith("trials")}
 order = [k for k in ("v1-naive", "v2-verified", "v2-recovery") if k in runs] + [k for k in runs if k not in ("v1-naive", "v2-verified", "v2-recovery")]
 rows = [
     ("Held-out tests passed (never seen by the agent)", lambda r: f"{r['heldout']['pass']}/{r['heldout']['total']}"),
@@ -26,5 +26,5 @@ for label, fn in rows:
 lines += ["", "- **v1-naive**: minimal prompt, tests only (pass/fail), no failure details, no model checker, no rollback.",
           "- **v2-verified**: commissioning method, failure details and scan tables, experiments on the digital twin, the model checker, regression detection and rollback.",
           "- **v2-recovery**: v2 with an injected failure (the model checker crashes on its first call) to show recovery.", ""]
-(ROOT / "docs" / "traces" / "README.md").write_text("\n".join(lines), encoding="utf-8")
+(ROOT / "docs" / "traces" / "runs.md").write_text("\n".join(lines), encoding="utf-8")
 print("\n".join(lines))
