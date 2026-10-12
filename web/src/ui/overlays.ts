@@ -28,9 +28,9 @@ export function heroStats(run: RunFile): HeroStats {
   const pct = (p: { pass: number; total: number }): string => `${Math.round((100 * p.pass) / Math.max(1, p.total))}%`;
   const proven = r.proofs.filter((p) => p.status === 'proven').length;
   return {
-    faults: `${r.faults_fixed.fixed}/${r.faults_fixed.total}`,
-    proven: `${proven}/${r.proofs.length}`,
-    heldout: `${pct(b.heldout)} → ${pct(r.heldout)}`,
+    faults: r.faults_fixed.total ? `${r.faults_fixed.fixed}/${r.faults_fixed.total}` : '—',
+    proven: r.proofs.length ? `${proven}/${r.proofs.length}` : '—',
+    heldout: r.heldout.total ? `${pct(b.heldout)} → ${pct(r.heldout)}` : '—',
   };
 }
 
