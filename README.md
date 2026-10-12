@@ -13,7 +13,7 @@ STOP/PROVE does that commissioning job end to end, **before the logic touches a 
 5. It **recovers** when an action fails: rejected patches, regressions (rolled back) and tool crashes.
 6. It **submits**, and an evaluation it never saw scores the repair: held-out tests, 300 randomized fuzz episodes and the proofs.
 
-**Live demo:** https://mohammad-umar7.github.io/neathack-agent/ · **Video:** https://youtu.be/N1fPHoXPd6A · **Business plan:** [docs/business-plan](docs/business-plan/README.md) · **Traces:** [docs/traces](docs/traces/README.md)
+**Live demo:** https://mohammad-umar7.github.io/neathack-agent/ · **Video:** https://youtu.be/N1fPHoXPd6A · **Submission:** [post on X](https://x.com/omerkhan767507/status/2109683118366204396) · **Business plan:** [docs/business-plan](docs/business-plan/README.md) · **Traces:** [docs/traces](docs/traces/README.md)
 
 ## What you see in the demo
 

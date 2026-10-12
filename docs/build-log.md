@@ -16,8 +16,14 @@ Public log of the build. Times are IST.
 | 19:35 | First real agent run (claude-sonnet-4.6 via LiteLLM): 16/16 held-out, 6/6 proven, 4/4 faults fixed in 39 s for $0.14. Its first patch passed all 8 tests but the model checker found S4 still violated, so it patched again. | |
 | 19:45 | Official runs exported to the viewer (v1 naive, v2 verified, v2 with an injected model-checker crash). Live at https://mohammad-umar7.github.io/neathack-agent/ | |
 | 19:50 | Traces showed failed actions (comments in rungs, too many edits, 0 s timers). Fixed the tool interface; failed actions per v2 run fell from 1.17 to 0.00 over six trials, cost from $0.190 to $0.169. | |
+| 20:12 | Demo video rendered with HyperFrames: 2:47, Kokoro voice-over, subtitles timed with Whisper, no music. Real agent runs, the neatlogs traces, the Entire checkpoint and the cfo.ai model on screen. | |
+| 20:21 | Demo video published on the live site. | |
+| 20:36 | Demo on YouTube (https://youtu.be/N1fPHoXPd6A), plus a 2:17 cut for X. | |
+| 22:00 | Submission post on X: a quote of the official neatlogs launch post, tagging @neatlogs, @EntireHQ and @arithecfo, with the demo attached. | [X](https://x.com/omerkhan767507/status/2109683118366204396) |
+| 22:14 | Submitted on the neatlogs form for the whole team. | |
 
 ## Problems hit (and what we did)
 
-- **Entire's `prepare-commit-msg` hook hangs** in this setup (Claude Code running in a git worktree with background subagents). Commits stall until the hook process is stopped. Entire also registered the session against the main checkout, so it reports "no files modified" and records no checkpoints for work done in the worktree. Plan: move the final commits to a session opened in the main checkout.
+- **Entire's `prepare-commit-msg` hook hangs** in this setup (Claude Code running in a git worktree with background subagents). Commits stall until the hook process is stopped. Entire also registered the session against the main checkout, so it reports "no files modified" and records no checkpoints for work done in the worktree. Fix: we committed with Entire's hooks off and linked the session afterwards with Entire's recovery command, `entire session attach --force`, which wrote the checkpoint and added the `Entire-Checkpoint:` trailer to [c929ee9](https://github.com/Mohammad-Umar7/neathack-agent/commit/c929ee9505309a2ac4bde6e597e8d0e6932a518f).
 - **No model access while the team lead was away**: the LiteLLM key needs every teammate's web check-in, and the local Claude CLI's login had expired. The agent was built and tested offline (scripted backend, mock OpenAI server) so the real runs take minutes once a key is in place.
+- **X won't post from a background tab.** With Chrome behind other windows, X never opened its composer or finished processing the attached video, so the submission post was published by hand from the drafted text.
