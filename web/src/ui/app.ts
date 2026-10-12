@@ -30,6 +30,7 @@ export interface Params {
   quality: 'high' | 'low';
   mock: boolean;
   theater: boolean;
+  cycle: boolean;
 }
 
 export function readParams(): Params {
@@ -48,6 +49,7 @@ export function readParams(): Params {
     quality: q.get('quality') === 'low' ? 'low' : 'high',
     mock: q.get('mock') === '1',
     theater: q.get('theater') === '1',
+    cycle: q.get('cycle') === '1',
   };
 }
 
@@ -927,6 +929,12 @@ export class App {
     const before = p.pos;
     const wrapped = p.advance(dt);
     if (!wrapped && p.pos > before) this.fireViolations(before, p.pos);
+    if (wrapped && this.mode === 'compare' && this.params.cycle && this.run.scenarios.length > 1) {
+      // hands-free demo: move on to the next scenario after each one has played through
+      const i = this.run.scenarios.findIndex((s) => s.id === this.scenarioId);
+      this.selectScenario(this.run.scenarios[(i + 1) % this.run.scenarios.length].id, false);
+      return;
+    }
     if (wrapped) this.fireViolations(0, p.pos);
     if (!p.playing) this.analyzer.setPlaying(false);
     this.renderPlayer();
