@@ -2,11 +2,11 @@
 // Used both by the scenario runner (scripted tests, parity with agent/plc/sim.py) and by
 // Play mode (live, interactive).
 
-import type { Frame, InputName, Rung, Scenario, ScenarioEvent, Trace, TraceEvent, Violation } from '../types';
+import type { Frame, Rung, Scenario, ScenarioEvent, Trace, TraceEvent, Violation } from '../types';
 import { OUTPUT_NAMES } from './lang';
-import { Monitor, RULE_MESSAGES } from './monitors';
+import { Monitor } from './monitors';
 import { DT, Plc, initialInputs, type Bit } from './plc';
-import { GEO, Plant, type Sensor } from './plant';
+import { Plant, type Sensor } from './plant';
 
 export const round1 = (x: number): number => Math.round(x * 10) / 10;
 
@@ -235,5 +235,3 @@ export function runScenario(program: Rung[], sc: Scenario): Trace {
   return trace;
 }
 
-export { GEO, RULE_MESSAGES };
-export type { InputName };

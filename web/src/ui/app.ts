@@ -5,7 +5,7 @@ import { runScenario } from '../sim/sim';
 import { rungEqual } from '../sim/lang';
 import { RULE_SCENARIO, SCENARIOS } from '../sim/scenarios';
 import { RULE_TITLES } from '../sim/monitors';
-import { Analyzer, violationLine, type AnalyzerView } from './analyzer';
+import { Analyzer, violationLine } from './analyzer';
 import { loadRun, type LoadedManifest, type ScenarioPairX } from './data';
 import { clamp, fmtDuration, fmtTokens, h, nodes } from './dom';
 import { ICONS } from './icons';
@@ -135,7 +135,6 @@ export class App {
       onStep: (d) => this.stepFrame(d),
       onSpeed: (s) => this.setSpeed(s),
       onSeek: (t) => this.seek(t),
-      onView: (v: AnalyzerView) => void v,
       onRestart: () => this.restart(),
     });
     this.playPanel = new PlayPanel({
