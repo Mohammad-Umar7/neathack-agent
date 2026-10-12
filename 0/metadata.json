@@ -3,17 +3,72 @@
   "checkpoint_id": "01M4R7QS89ZTGYHDWBSDA7AXRP",
   "session_id": "d363eb62-c2d3-415f-a614-2d964d79f2c4",
   "strategy": "manual-commit",
-  "created_at": "2026-10-12T14:19:53.0202258Z",
+  "created_at": "2026-10-12T14:20:05.8576068Z",
+  "branch": "claude/neathack-hackathon-e0846b",
   "checkpoints_count": 12,
-  "files_touched": null,
+  "files_touched": [],
   "agent": "Claude Code",
   "model": "claude-opus-5-5",
+  "turn_id": "fe5931e13d45",
   "compact_transcript_start": 0,
   "token_usage": {
     "input_tokens": 512,
     "cache_creation_tokens": 764612,
     "cache_read_tokens": 106882818,
     "output_tokens": 336952,
-    "api_call_count": 254
-  }
+    "api_call_count": 254,
+    "subagent_tokens": {
+      "input_tokens": 906,
+      "cache_creation_tokens": 2181191,
+      "cache_read_tokens": 161419998,
+      "output_tokens": 47425,
+      "api_call_count": 449
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01DsSHMP3K33tXZCtAkqgpoR",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "brag"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "fe5931e13d45",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 984,
+        "end": 985,
+        "entry_ids": [
+          "82ce5d95-a501-4d90-ae25-b27a3abbd66d"
+        ],
+        "tool_use_id": "toolu_01DsSHMP3K33tXZCtAkqgpoR"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01DsSHMP3K33tXZCtAkqgpoR"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: brag",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 12
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
 }

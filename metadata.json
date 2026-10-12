@@ -2,6 +2,7 @@
   "cli_version": "0.11.4",
   "checkpoint_id": "01M4R7QS89ZTGYHDWBSDA7AXRP",
   "strategy": "manual-commit",
+  "branch": "claude/neathack-hackathon-e0846b",
   "checkpoints_count": 12,
   "files_touched": null,
   "sessions": [
@@ -10,7 +11,7 @@
       "transcript": "/0/full.jsonl",
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
-      "prompt": "/0/prompt.txt"
+      "prompt": ""
     }
   ],
   "token_usage": {
@@ -18,6 +19,13 @@
     "cache_creation_tokens": 764612,
     "cache_read_tokens": 106882818,
     "output_tokens": 336952,
-    "api_call_count": 254
+    "api_call_count": 254,
+    "subagent_tokens": {
+      "input_tokens": 906,
+      "cache_creation_tokens": 2181191,
+      "cache_read_tokens": 161419998,
+      "output_tokens": 47425,
+      "api_call_count": 449
+    }
   }
 }
