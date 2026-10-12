@@ -64,6 +64,21 @@ const NULL_STAGE: Stage = {
   dispose() {},
 };
 
+/** What happened to the boxes in a trace: picked, dropped, and whether the cell ended up faulted. */
+function outcomeChips(tr: Trace): HTMLElement[] {
+  const last = tr.frames[tr.frames.length - 1];
+  if (!last) return [];
+  const picked = last.boxes.filter((b) => b.state === 'picked').length;
+  const dropped = last.boxes.filter((b) => b.state === 'dropped').length;
+  // a jam fault that trips while no sensor is forced is a false trip
+  const faulted = tr.frames.some((f, i) => f.coil.FAULT === 1 && (tr.frames[i - 1]?.coil.FAULT ?? 0) === 0 && !Object.keys(f.stuck ?? {}).length);
+  const out: HTMLElement[] = [];
+  if (picked) out.push(h('span', { class: 'cap-chip good' }, `${picked} picked`));
+  if (dropped) out.push(h('span', { class: 'cap-chip bad' }, `${dropped} dropped`));
+  if (faulted && !dropped) out.push(h('span', { class: 'cap-chip warn' }, 'false jam fault'));
+  return out;
+}
+
 /** Where the camera looks while the agent investigates each built-in scenario. */
 const SCENARIO_FOCUS: Record<string, FocusTarget> = {
   'pick-overrun': 'pick',
@@ -535,6 +550,7 @@ export class App {
         h('span', { class: 'cap-sep' }, '·'),
         h('span', null, def?.title ?? this.focusScenario),
         h('span', { class: `cap-chip ${nV ? 'bad' : 'good'}` }, nV ? `${nV} violation${nV > 1 ? 's' : ''}` : 'no violations'),
+        ...outcomeChips(tr),
       );
       this.analyzer.setTitle(`${def?.title ?? 'Scenario'} · ${ver}`, []);
       this.stage.focus(SCENARIO_FOCUS[this.focusScenario] ?? 'overview');

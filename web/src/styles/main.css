@@ -369,6 +369,7 @@ code, pre { font-family: var(--mono); }
 .cap-chip { font-family: var(--mono); font-size: 10.5px; padding: 1px 7px; border-radius: 999px; }
 .cap-chip.bad { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
 .cap-chip.good { background: rgba(34, 197, 94, 0.14); color: #86efac; }
+.cap-chip.warn { background: rgba(245, 158, 11, 0.14); color: #fcd34d; }
 
 /* ---------- toasts ---------- */
 .toasts { position: fixed; z-index: 40; top: calc(var(--top) + var(--gap) + 86px); right: calc(var(--right-w) + var(--gap) * 2 + 12px); display: flex; flex-direction: column; gap: 8px; width: 340px; max-width: calc(100vw - 32px); pointer-events: none; }
