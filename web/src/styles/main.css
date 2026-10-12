@@ -315,6 +315,14 @@ code, pre { font-family: var(--mono); }
 .sc-card.bump { animation: bump 0.6s var(--ease); }
 @keyframes bump { 0% { transform: translateY(0); } 30% { transform: translateY(-3px); border-color: rgba(245, 197, 24, 0.6); } 100% { transform: none; } }
 
+@media (max-width: 1680px) {
+  .sc-card.big { flex-basis: 108px; padding: 7px 10px 8px; }
+  .sc-card.big .sc-sub { display: none; }
+  .sc-val { font-size: 19px; }
+  .sc-from { font-size: 12.5px; }
+  .sc-label { font-size: 9.5px; letter-spacing: 0.08em; }
+}
+
 /* ---------- stage caption ---------- */
 .stage-caption { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 6px 12px; border-radius: 999px; background: rgba(8, 10, 14, 0.78); border: 1px solid var(--line); backdrop-filter: blur(12px); font-size: 12px; color: var(--text-2); white-space: nowrap; overflow: hidden; }
 .stage-caption:empty { display: none; }

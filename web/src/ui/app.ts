@@ -12,7 +12,7 @@ import { LadderView, diffSummary, frameMemory, presets } from './ladder';
 import { EvidenceDrawer, ScenarioPicker, heroDismissed, showHero, wordmark } from './overlays';
 import { CustomProgram, LiveSim, PlayPanel, liveRuleStatuses, programFor, type ProgramChoice } from './play';
 import { Player, crossed, frameIndex, interpolate } from './player';
-import type { Stage } from './stage';
+import type { FocusTarget, Stage } from './stage';
 import { Timeline } from './timeline';
 import { RulesList, Scoreboard, Toasts, statusesFromEval, type Card, type RuleStatus } from './widgets';
 
@@ -57,6 +57,15 @@ const NULL_STAGE: Stage = {
   setInteractive() {},
   resize() {},
   dispose() {},
+};
+
+/** Where the camera looks while the agent investigates each built-in scenario. */
+const SCENARIO_FOCUS: Record<string, FocusTarget> = {
+  'pick-overrun': 'pick',
+  'estop-no-reset': 'panel',
+  'guard-restart': 'guard',
+  'stuck-infeed': 'infeed',
+  production: 'overview',
 };
 
 const MODE_LABEL: Record<Mode, string> = { agent: 'Agent run', compare: 'Before / After', play: 'Play' };
@@ -245,7 +254,7 @@ export class App {
     if (this.mode === 'compare') stage.setLayout('twin', { A: 'BASELINE — as delivered', B: 'REPAIRED — by the agent' });
     else stage.setLayout('single');
     stage.setInteractive(this.mode === 'play');
-    stage.focus(this.mode === 'play' ? 'auto' : 'overview');
+    stage.focus(this.mode === 'play' ? 'auto' : this.mode === 'agent' ? SCENARIO_FOCUS[this.focusScenario] ?? 'overview' : 'overview');
     this.lastApplied = {};
     stage.resize();
   }
@@ -343,7 +352,6 @@ export class App {
       q.set('mode', this.mode ?? 'agent');
       if (this.mode === 'compare' && this.scenarioId) q.set('scenario', this.scenarioId);
       else q.delete('scenario');
-      q.delete('autoplay');
       history.replaceState(null, '', `${location.pathname}?${q.toString()}${location.hash}`);
     } catch {
       /* file:// or sandboxed */
@@ -409,6 +417,7 @@ export class App {
     const m = /\b(S[1-7])\b/.exec(`${s.title} ${s.kind === 'tool' && s.tool === 'prove' ? '' : ''}`);
     if (m && s.kind !== 'tool') return RULE_SCENARIO[m[1]];
     if (m && (s.tool === 'get_counterexample' || s.tool === 'simulate')) return RULE_SCENARIO[m[1]];
+    if (s.kind === 'error' || s.kind === 'submit') return 'production';
     return null;
   }
 
@@ -481,6 +490,7 @@ export class App {
         h('span', { class: `cap-chip ${nV ? 'bad' : 'good'}` }, nV ? `${nV} violation${nV > 1 ? 's' : ''}` : 'no violations'),
       );
       this.analyzer.setTitle(`${def?.title ?? 'Scenario'} · ${ver}`, []);
+      this.stage.focus(SCENARIO_FOCUS[this.focusScenario] ?? 'overview');
     }
 
     // narrate the recovery story
