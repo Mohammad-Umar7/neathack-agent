@@ -519,7 +519,7 @@ code, pre { font-family: var(--mono); }
 .app.theater .toasts { right: calc(var(--gap) * 2 + 12px); }
 
 /* ---------- clean mode (demo recording) ---------- */
-.app.clean .tagline, .app.clean .run-select, .app.clean .evidence-btn, .app.clean .data-badge, .app.clean .modes .kbd { display: none; }
+.app.clean .tagline, .app.clean .run-select, .app.clean .evidence-btn, .app.clean .data-badge, .app.clean .modes .kbd, .app.clean .trace-link { display: none; }
 
 /* ---------- mobile / narrow ---------- */
 .mobile-tabs { display: none; }
