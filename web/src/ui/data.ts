@@ -87,7 +87,7 @@ export function normalizeRun(r: RunFile, label?: string): RunFile {
   return {
     ...r,
     id: r.id ?? 'run',
-    label: r.label ?? label ?? r.id,
+    label: r.label ?? label ?? r.id ?? 'run',
     agent: r.agent ?? 'v2',
     model: r.model ?? 'unknown model',
     provider: r.provider ?? '',
