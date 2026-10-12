@@ -68,8 +68,11 @@ TOOL_DEFS = {
         "name": "propose_patch",
         "description": (
             f"Change the program with up to {MAX_EDITS} edits: {{op: replace|insert_after|delete, id, text}}. "
-            "replace rewrites rung `id` with `text`; insert_after adds a new rung after `id` (use id START for the top); "
-            "delete removes rung `id`. The patch is parsed and checked against the language limits, then the tests run on it."
+            "replace rewrites rung `id` with `text` (use it to change an existing rung; a coil may be assigned by only one rung, "
+            "so never insert a second rung for the same coil); insert_after adds a new rung after `id` (use id START for the top); "
+            "delete removes rung `id`. To remove a timer, delete its TON rung and every T_X.Q that reads it (presets must be "
+            f"0.1-10 s). Need more than {MAX_EDITS} edits? Send two patches. The patch is parsed and checked against the "
+            "language limits, then the tests run on it."
         ),
         "parameters": _schema(
             {"edits": {"type": "array", "items": {"type": "object"}}, "rationale": {"type": "string"}}, ["edits", "rationale"]

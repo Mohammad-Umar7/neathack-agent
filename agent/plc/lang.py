@@ -118,6 +118,9 @@ class _Parser:
 
 def parse_rung(text: str, rung_id: str = "R00", comment: str | None = None) -> dict:
     """Parse one rung of source text into a Rung dict (see web/src/types.ts)."""
+    if "#" in text:  # a trailing "# comment" is kept as the rung's comment, not a syntax error
+        text, note = text.split("#", 1)
+        comment = comment or note.strip() or None
     toks = _tokenize(text)
     if not toks:
         raise ParseError("empty rung")
