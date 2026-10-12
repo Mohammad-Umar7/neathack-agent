@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STOP/PROVE — 3D scene test</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0b0e14;
+        overflow: hidden;
+        font: 12px/1.4 Inter, 'Segoe UI', system-ui, sans-serif;
+      }
+      #stage {
+        position: fixed;
+        inset: 0;
+      }
+      #hud,
+      #help {
+        position: fixed;
+        left: 12px;
+        color: #cfd8e3;
+        background: rgba(8, 10, 14, 0.6);
+        padding: 6px 10px;
+        border-radius: 6px;
+        pointer-events: none;
+        backdrop-filter: blur(4px);
+      }
+      #hud {
+        top: 12px;
+        font-family: Consolas, monospace;
+      }
+      #help {
+        bottom: 12px;
+        opacity: 0.75;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <div id="hud"></div>
+    <div id="help">
+      1 overview · 2 infeed · 3 pick · 4 panel · 5 guard · 0/A auto orbit · T twin · Space pause · ←/→ scrub ·
+      +/- speed · I interactive · V test violation · R restart
+    </div>
+    <script type="module" src="/src/scene/dev.ts"></script>
+  </body>
+</html>
