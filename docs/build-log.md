@@ -12,6 +12,10 @@ Public log of the build. Times are IST.
 | 18:35 | Test suites (8 visible, 16 held-out, randomized fuzzing) and a model checker with timer abstraction. Program as delivered: 2/16 held-out, 3/6 rules proven. Reference repair: 16/16, 6/6, in 0.5 s. | |
 | 18:50 | Agent loop with 9 tools, v1 (naive) and v2 (verified) configurations, injected-failure mode, context trimming, held-out evaluation and export to the viewer. Tested offline with a scripted backend and a mock OpenAI-compatible server. | |
 | 19:00 | GitHub Pages workflow, demo-video recorder (headless Chrome screencast), Kokoro voice-over test. | |
+| 19:25 | cfo.ai: Ari rebuilt the business plan as a 36-month model (ARR $223k / $1.36M / $3.37M at months 12/24/36, gross margin 62% / 67% / 71%, ~24 months of pre-seed runway) with base, upside, downside and no-seed scenarios. | |
+| 19:35 | First real agent run (claude-sonnet-4.6 via LiteLLM): 16/16 held-out, 6/6 proven, 4/4 faults fixed in 39 s for $0.14. Its first patch passed all 8 tests but the model checker found S4 still violated, so it patched again. | |
+| 19:45 | Official runs exported to the viewer (v1 naive, v2 verified, v2 with an injected model-checker crash). Live at https://mohammad-umar7.github.io/neathack-agent/ | |
+| 19:50 | Traces showed failed actions (comments in rungs, too many edits, 0 s timers). Fixed the tool interface; failed actions per v2 run fell from 1.17 to 0.00 over six trials, cost from $0.190 to $0.169. | |
 
 ## Problems hit (and what we did)
 
