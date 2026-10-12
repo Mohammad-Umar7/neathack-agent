@@ -1,0 +1,9 @@
+﻿[project]
+name = "neathack-agent"
+version = "0.1.0"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "neatlogs[openai]>=1.4.26",
+    "openai>=3.29.0",
+    "python-dotenv>=1.2.4",
+]
