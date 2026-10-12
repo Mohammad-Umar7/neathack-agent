@@ -528,3 +528,6 @@ code, pre { font-family: var(--mono); }
 /* ---------- stage loading ---------- */
 .app:not(.stage-ready) .stage-host::after { content: 'Loading the digital twin'; position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.035) 50%, transparent 70%) 0 0 / 200% 100%; animation: shimmer 1.4s linear infinite; }
 @keyframes shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+
+/* Before/After: the twin's cell labels sit at the top of the stage, so the scoreboard moves below */
+.app[data-mode='compare'] .center-top { flex-direction: column-reverse; }
