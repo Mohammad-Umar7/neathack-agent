@@ -76,6 +76,7 @@ interface ViolationFx {
   tag: CSS2DObject;
   age: number;
   spot: THREE.Vector3;
+  key: string;
 }
 
 export class Cell {
@@ -277,18 +278,29 @@ export class Cell {
   }
 
   flashViolation(v: Violation): void {
-    const spot = spotFor(v.rule);
+    const ruleId = String(v?.rule ?? '?');
+    const tSec = Number(v?.t ?? 0);
+    const message = String(v?.message ?? '');
+    // ignore repeats of a violation that is still on screen; keep at most 4 tags
+    const key = `${ruleId}@${tSec.toFixed(2)}`;
+    if (this.fx.some((f) => f.key === key && f.age < 3)) return;
+    while (this.fx.length >= 4) {
+      const old = this.fx.shift()!;
+      old.tag.removeFromParent();
+      old.tag.element.remove();
+    }
+    const spot = spotFor(ruleId);
     const stack = this.fx.filter((f) => f.spot === spot && f.age < 3).length;
-    const rule = escapeHtml(v.rule);
-    const kind = v.rule.toUpperCase() === 'DROP' ? 'BOX DROPPED' : 'SAFETY VIOLATION';
+    const rule = escapeHtml(ruleId);
+    const kind = ruleId.toUpperCase() === 'DROP' ? 'BOX DROPPED' : 'SAFETY VIOLATION';
     const tag = makeLabel(
       'sp3d-viol-wrap',
-      `<div class="sp3d-viol"><span class="k">${kind} · t=${v.t.toFixed(1)}s</span><span class="r">${rule}</span>${escapeHtml(v.message)}</div>`,
+      `<div class="sp3d-viol"><span class="k">${kind} · t=${tSec.toFixed(1)}s</span><span class="r">${rule}</span>${escapeHtml(message)}</div>`,
     );
     tag.element.style.opacity = '0';
     tag.position.copy(spot).add(new THREE.Vector3(0, 0.32 + stack * 0.32, 0));
     this.content.add(tag);
-    this.fx.push({ tag, age: 0, spot });
+    this.fx.push({ tag, age: 0, spot, key });
     this.violAge = 0;
     this.violLight.position.copy(spot).add(new THREE.Vector3(0, 0.45, 0.6));
     this.violGlow.position.copy(spot);
