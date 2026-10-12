@@ -142,6 +142,7 @@ export class StageImpl implements Stage {
     }
 
     this.applyLayout(false);
+    this.env.onReady = () => this.precompile();
 
     canvas.addEventListener('pointermove', this.onPointerMove);
     canvas.addEventListener('pointerdown', this.onPointerDown);
@@ -275,7 +276,7 @@ export class StageImpl implements Stage {
   /** Overview pose fitted to the layout width for the current aspect ratio. */
   private overviewPose(): [THREE.Vector3, THREE.Vector3] {
     const twin = this.layout === 'twin';
-    const target = twin ? V(0, 0.55, 0.25) : V(-0.05, 0.7, 0.1);
+    const target = twin ? V(0, 0.45, -1.0) : V(-0.05, 0.7, 0.1);
     const dir = (twin ? V(2.2, 7.6, 16.0) : V(3.3, 5.0, 8.4)).normalize();
     const halfW = twin ? 8.3 : 4.2;
     const halfH = twin ? 2.6 : 2.5;
@@ -304,6 +305,26 @@ export class StageImpl implements Stage {
   }
 
   private readonly hoverTag: ReturnType<typeof makeLabel>;
+
+  /**
+   * Compile the programs for both layouts once the environment map is in place, with the
+   * composer's target bound (programs differ for tone-mapped screen output vs. the linear
+   * HDR target). Cell B adds lights, so without this the first switch to twin stalls.
+   */
+  private precompile(): void {
+    if (this.disposed) return;
+    const prevTarget = this.renderer.getRenderTarget();
+    if (this.composer) this.renderer.setRenderTarget(this.composer.renderTarget1);
+    const twin = this.layout === 'twin';
+    const compileFor = (asTwin: boolean) => {
+      this.cells.B.setActive(asTwin);
+      this.env.setAnchors(asTwin ? [this.cells.A.root.position, this.cells.B.root.position] : [this.cells.A.root.position]);
+      this.renderer.compileAsync(this.scene, this.camera).catch(() => undefined);
+    };
+    compileFor(!twin);
+    compileFor(twin);
+    this.renderer.setRenderTarget(prevTarget);
+  }
 
   private setHover(c: PanelControl | null, at?: THREE.Vector3): void {
     if (at && c) this.hoverTag.position.copy(at);

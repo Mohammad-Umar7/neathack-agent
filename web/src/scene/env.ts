@@ -120,6 +120,8 @@ export class Environment {
   private readonly bg: THREE.Mesh;
   private readonly coneMat: THREE.ShaderMaterial;
   private envTex: THREE.Texture | null = null;
+  /** Called once the environment map is installed (used to pre-compile shaders). */
+  onReady: (() => void) | null = null;
   private disposed = false;
   private readonly textures: THREE.Texture[] = [];
 
@@ -257,6 +259,7 @@ export class Environment {
         this.scene.environment = this.envTex;
         this.scene.environmentIntensity = 0.55;
         this.scene.environmentRotation.set(0, 1.9, 0);
+        this.onReady?.();
       },
       undefined,
       () => {
@@ -268,6 +271,7 @@ export class Environment {
           pmrem.dispose();
           this.scene.environment = this.envTex;
           this.scene.environmentIntensity = 0.4;
+          this.onReady?.();
         });
       },
     );
