@@ -13,7 +13,7 @@ STOP/PROVE does that commissioning job end to end, **before the logic touches a 
 5. It **recovers** when an action fails: rejected patches, regressions (rolled back) and tool crashes.
 6. It **submits**, and an evaluation it never saw scores the repair: held-out tests, 300 randomized fuzz episodes and the proofs.
 
-**Live demo:** _deploying_ · **Video:** _coming_ · **Business plan:** [docs/business-plan](docs/business-plan/README.md)
+**Live demo:** https://mohammad-umar7.github.io/neathack-agent/ · **Video:** [brag.mp4 (release)](https://github.com/Mohammad-Umar7/neathack-agent/releases/latest) · **Business plan:** [docs/business-plan](docs/business-plan/README.md) · **Traces:** [docs/traces](docs/traces/README.md)
 
 ## What you see in the demo
 
@@ -24,15 +24,24 @@ STOP/PROVE does that commissioning job end to end, **before the logic touches a 
 
 ## Results
 
+Real runs with `claude-sonnet-4.6` (neatHack LiteLLM proxy), traced in neatlogs. The held-out tests, fuzzing and proofs run after the agent submits.
+
 | | Program as delivered | After the agent |
 |---|---|---|
-| Visible tests | 2 / 8 | _from the run_ |
-| **Held-out tests** (never shown to the agent) | 2 / 16 | _from the run_ |
-| Safety rules **proven** (S1–S6, every reachable state) | 3 / 6 | _from the run_ |
-| Fuzz episodes with a violation (300 random runs) | 111 / 300 | _from the run_ |
-| Hidden seeded faults fixed | 0 / 4 | _from the run_ |
+| Visible tests | 2 / 8 | 8 / 8 |
+| **Held-out tests** (never shown to the agent) | 2 / 16 | **16 / 16** |
+| Safety rules **proven** (S1–S6, every reachable state) | 3 / 6 | **6 / 6** |
+| Fuzz episodes with a violation (300 random runs) | 111 / 300 | **0 / 300** |
+| Hidden seeded faults fixed | 0 / 4 | **4 / 4** |
+| Cost / wall time of the agent run (v2) | | $0.13 / 27 s |
 
-Agent v1 vs v2 (before/after, traced in neatlogs): see [docs/traces](docs/traces/README.md).
+- **Tests are not enough.** In 3 of 6 trials, the agent wrote a patch that passed all 8 tests but still broke a safety rule. The model checker caught every one before submission.
+- **Improved from its traces.** The run records showed failed actions (rejected patches). After fixing the tool interface, failed actions per run fell from **1.17 to 0.00** and cost from $0.190 to $0.169 (6 trials each).
+- **Recovers.** With a crash injected into the model checker, the agent works around it and still submits a proven repair; neatlogs flags the crash as an Execution Failed detection.
+
+Details, raw data and screenshots: [docs/traces](docs/traces/README.md).
+
+![The viewer: Before/After on the same scenario](docs/evidence/viewer-before-after.jpg)
 
 ## How it works
 
@@ -74,9 +83,9 @@ Agent v1 vs v2 (before/after, traced in neatlogs): see [docs/traces](docs/traces
 
 | Tool | How it's used |
 |---|---|
-| [neatlogs](https://neatlogs.com) | Traces every agent run: the workflow span, every LLM call and every tool call, with tokens, latency and cost. The before/after comparison of agent v1 and v2 is in [docs/traces](docs/traces/README.md). |
-| [Entire](https://entire.io) | Records the Claude Code session behind this repo's commits as checkpoints. |
-| [cfo.ai](https://cfo.ai) | The business plan: pricing, costs, revenue and runway ([docs/business-plan](docs/business-plan/README.md)). |
+| [neatlogs](https://neatlogs.com) | `neatlogs.init()` runs before the OpenAI client is imported, so every LLM call is captured; `@span(kind="WORKFLOW")` wraps each run and every tool call gets a `TOOL` span with inputs and outputs. neatlogs' automatic detections flag failed tool calls. Screenshots and the before/after numbers: [docs/traces](docs/traces/README.md). |
+| [Entire](https://entire.io) | Recorded the Claude Code session that built this repo. Its commit hook froze in our git-worktree setup, so we linked the session with Entire's own recovery command (`entire session attach`): see the `Entire-Checkpoint:` trailer on [c929ee9](https://github.com/Mohammad-Umar7/neathack-agent/commit/c929ee9505309a2ac4bde6e597e8d0e6932a518f) and the `refs/entire/checkpoints/...` ref. |
+| [cfo.ai](https://cfo.ai) | Ari, cfo.ai's AI CFO, rebuilt our plan as a 36-month model with base, upside, downside and no-seed scenarios: ARR $223k / $1.36M / $3.37M at months 12 / 24 / 36, gross margin 62% / 67% / 71%, about 24 months of runway on a $500k pre-seed ([screenshot](docs/evidence/cfo-ai-model.jpg), [plan](docs/business-plan/README.md)). |
 | Claude (via the neatHack LiteLLM proxy) | The agent's model. |
 | three.js | The digital twin (all CC0 assets from Poly Haven, see `web/public/assets/CREDITS.txt`). |
 
