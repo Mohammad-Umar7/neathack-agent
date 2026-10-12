@@ -100,6 +100,7 @@ export class App {
   private ladderChips: HTMLDivElement;
   private progSeg: HTMLDivElement;
   private dataBadge: HTMLSpanElement;
+  private traceLink: HTMLAnchorElement;
   private stageBadge: HTMLSpanElement;
 
   // agent mode
@@ -166,13 +167,15 @@ export class App {
     evBtn.innerHTML = `${ICONS.layers}<span>Evidence</span>`;
     evBtn.addEventListener('click', () => this.drawer.toggle());
     this.dataBadge = h('span', { class: 'data-badge' });
+    this.traceLink = h('a', { class: 'trace-link', target: '_blank', rel: 'noopener', title: 'Open this run in neatlogs' }) as HTMLAnchorElement;
+    this.traceLink.innerHTML = `${ICONS.trace}<span>neatlogs</span>`;
     this.stageBadge = h('span', { class: 'data-badge stage-badge' });
     const topbar = h(
       'header',
       { class: 'topbar' },
       h('div', { class: 'brand' }, wordmark(), h('span', { class: 'tagline' }, 'An agent that commissions PLC logic — and proves it’s safe.')),
       modes,
-      h('div', { class: 'top-right' }, this.dataBadge, this.stageBadge, this.runSelect, evBtn),
+      h('div', { class: 'top-right' }, this.dataBadge, this.stageBadge, this.traceLink, this.runSelect, evBtn),
     );
 
     // ---- panels ----
@@ -304,6 +307,9 @@ export class App {
     this.dataBadge.classList.toggle('mock', this.lm.isMock);
     this.dataBadge.title = this.lm.isMock ? 'web/public/data/manifest.json not found: showing generated sample data' : run.label;
     this.simCache.clear();
+    if (run.neatlogs_url) this.traceLink.href = run.neatlogs_url;
+    else this.traceLink.removeAttribute('href');
+    this.traceLink.style.display = run.neatlogs_url ? '' : 'none';
     this.timeline.setRun(run);
     this.rules.setSpec(run.spec);
     this.picker.setScenarios(run.scenarios);

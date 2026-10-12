@@ -93,6 +93,9 @@ code, pre { font-family: var(--mono); }
 .top-right { display: flex; justify-content: flex-end; align-items: center; gap: 8px; min-width: 0; }
 .run-select { max-width: 220px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 12.5px; color: var(--text-2); outline: none; }
 .run-select option { background: #12161d; }
+.trace-link { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #67e8f9; text-decoration: none; border: 1px solid rgba(34, 211, 238, 0.3); background: rgba(34, 211, 238, 0.06); transition: background 0.15s; }
+.trace-link:hover { background: rgba(34, 211, 238, 0.12); }
+.trace-link svg { width: 14px; height: 14px; }
 .data-badge { font-family: var(--mono); font-size: 10.5px; color: var(--text-3); border: 1px solid var(--line); padding: 3px 7px; border-radius: 6px; white-space: nowrap; }
 .data-badge:empty { display: none; }
 .data-badge.mock { color: var(--amber); border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.06); }
